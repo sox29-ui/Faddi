@@ -1,13 +1,22 @@
 <p align="center">
-  <img src="docs/icon.png" alt="Faddi logo" width="96" height="96">
+  <img src="docs/banner.png" alt="Faddi · فضّي" width="100%">
 </p>
 
-<h1 align="center">Faddi · فضّي</h1>
+<p align="center">
+  <b>English</b> &middot;
+  <a href="README.ar.md">العربية</a> &middot;
+  <a href="README.es.md">Español</a> &middot;
+  <a href="README.fr.md">Français</a> &middot;
+  <a href="README.pt.md">Português</a> &middot;
+  <a href="README.ru.md">Русский</a> &middot;
+  <a href="README.tr.md">Türkçe</a> &middot;
+  <a href="README.zh.md">简体中文</a>
+</p>
 
 <p align="center">
   <b>Find what's eating your disk, clean it safely, and keep your RAM in check.</b><br>
-  A free Windows app that reads your whole drive in about a minute, sorts everything it finds by how safe it is to delete,<br>
-  and frees the memory programs hold but aren't using. One small exe, nothing to install, in eight languages.
+  A free, open-source Windows app that reads your whole drive in about a minute, sorts everything it finds by how safe it is to delete,
+  and frees the memory programs hold but aren't using. One small exe, nothing to install.
 </p>
 
 <p align="center">
@@ -21,14 +30,14 @@
 </p>
 
 <p align="center">
-  <a href="#download">Download</a> &middot;
+  <a href="#install">Install</a> &middot;
   <a href="#features">Features</a> &middot;
   <a href="#screenshots">Screenshots</a> &middot;
   <a href="#what-faddi-cleans">What it cleans</a> &middot;
   <a href="#the-ram-optimizer">RAM optimizer</a> &middot;
   <a href="#safe-by-design">Safe by design</a> &middot;
   <a href="#for-developers">For developers</a> &middot;
-  <a href="#العربية">العربية</a>
+  <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
 <p align="center">
@@ -48,7 +57,19 @@ Faddi (فضّي, Arabic for "free it up") shows you exactly where your disk spac
 
 Everything stays on your PC. Faddi sends nothing over the network.
 
-## Download
+## Install
+
+### One line in PowerShell (easiest, no warning screen)
+
+Press Start, type `PowerShell`, press Enter, then paste this line and press Enter:
+
+```powershell
+irm https://raw.githubusercontent.com/sox29-ui/Faddi/main/install.ps1 | iex
+```
+
+It downloads the latest `Faddi.exe` into `%LOCALAPPDATA%\Programs\Faddi`, adds Faddi to the Start menu and the Desktop, and opens it. Run the same line again to update.
+
+### Or download the exe
 
 <p>
   <a href="https://github.com/sox29-ui/Faddi/releases/latest/download/Faddi.exe"><img alt="Download Faddi.exe" src="https://img.shields.io/badge/Download-Faddi.exe-E8A33A?style=for-the-badge"></a>
@@ -57,11 +78,11 @@ Everything stays on your PC. Faddi sends nothing over the network.
 1. Download **Faddi.exe** from the [latest release](https://github.com/sox29-ui/Faddi/releases/latest). It's one file of about 66 MB with everything inside, so there is nothing to install.
 2. Double-click it. The scan starts right away: five million files on an NVMe SSD take 45 to 90 seconds, and the disk strip fills in while it reads.
 
-   Windows may show **"Windows protected your PC"** because the exe is new and not code-signed. Click **More info**, then **Run anyway**.
+   Windows may show **"Windows protected your PC"** because the exe is new and not code-signed. Click **More info**, then **Run anyway**. The PowerShell line above avoids this screen.
 3. Optional: press **Run as admin** at the bottom of the sidebar. As admin Faddi can read protected folders, show disk temperature and wear, clean Windows' own leftovers and clear the standby cache.
 
 > Faddi uses the Microsoft Edge WebView2 Runtime, which comes with Windows 11 and is already on almost every Windows 10 PC. If it's missing, Faddi tells you.<br>
-> To remove Faddi, turn off **Start with Windows** in RAM & performance, then delete `Faddi.exe` and the `%LOCALAPPDATA%\Faddi` folder.
+> To remove Faddi, turn off **Start with Windows** in RAM & performance, then delete `Faddi.exe` (or `%LOCALAPPDATA%\Programs\Faddi`), its shortcuts and the `%LOCALAPPDATA%\Faddi` folder.
 
 ## Features
 
@@ -120,7 +141,7 @@ Open it from **RAM & performance**, the **Optimize** button in the sidebar, or t
 | Setting | What it does |
 |---|---|
 | <img src="docs/icons/bolt.svg" width="16"> **Optimize now** | Frees memory right away and shows how much came back. |
-| **When RAM use reaches** | Runs on its own when usage passes the limit you pick (50 to 95%, 85% by default), at most once every 2 minutes. |
+| **When RAM use reaches** | Runs on its own when usage passes the limit you pick (70 to 95%, 85% by default), at most once every 2 minutes. |
 | **Every** | Runs on a timer: every 3, 5, 10, 30 or 60 minutes. |
 | **Only while the CPU is idle** | Automatic runs wait until the processor is under 30%, so they never cut into a game. On by default. |
 | **Free memory programs hold** | Empties every program's working set: the pages it holds but isn't using go back to Windows. On by default. |
@@ -201,59 +222,10 @@ Arabic is written straight in the code; every other language is one file in `Fad
 
 ## Contributing
 
-Issues and pull requests are welcome, especially new languages and cleanup rules for tools Faddi doesn't know yet. Please run the self-checks before sending a change to the cleanup rules.
+Issues and pull requests are welcome, especially new languages and cleanup rules for tools Faddi doesn't know yet. Start with the [contributing guide](CONTRIBUTING.md), and please follow the [code of conduct](CODE_OF_CONDUCT.md).
+
+Found a security problem, such as a way to make Faddi delete something it shouldn't? Please report it privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
-Faddi is released under the [MIT License](LICENSE).
-
----
-
-<div dir="rtl">
-
-## العربية
-
-<p align="center">
-  <b>اعرف وش ماكل مساحة جهازك، ونظّفها بأمان، وخلّ الرام تحت السيطرة.</b><br>
-  برنامج مجاني لويندوز، ملف واحد بدون تثبيت، وبثمان لغات منها العربي والإنجليزي.
-</p>
-
-<p align="center">
-  <a href="https://github.com/sox29-ui/Faddi/releases/latest/download/Faddi.exe"><img alt="حمّل Faddi.exe" src="https://img.shields.io/badge/%D8%AD%D9%85%D9%91%D9%84-Faddi.exe-E8A33A?style=for-the-badge"></a>
-</p>
-
-![الرئيسية](docs/home-ar.png)
-
-### وش يسوي
-
-- **يفحص القرص كامل في حوالي دقيقة**، حتى لو فيه ملايين الملفات، ويوريك وين راحت المساحة في شريط واحد: ألعاب وبرامج، مخلفات برمجة، كاش، أشياء قديمة، ويندوز، والباقي.
-- **خريطة المساحة**: كل مجلد مربع على قد حجمه، ولونه يقول متى آخر مرة انلمس.
-- **تنظيف مرتب حسب الأمان**: الكاش والملفات المؤقتة محددة جاهز، والباقي أنت تقرر فيه. جنب كل عنصر مكتوب وش هو ووش يصير لو حذفته.
-- **يعرف مخلفات البرمجة**: `node_modules` وبيئات بايثون وكاش npm وpip وGradle وUnity وUnreal وغيرها.
-- **أكبر الملفات وأنواعها**، و**الملفات المكررة** (يقارن المحتوى مو الأسماء)، و**البرامج المثبتة** بحجمها الحقيقي.
-- **مُحسّن الرام**: يفرّغ الرام اللي تحجزها البرامج وهي ما تستخدمها، بضغطة أو تلقائياً لما توصل الرام نسبة تحددها أو كل كم دقيقة، وبس لما المعالج فاضي.
-- **مراقبة الرام**: يسجّل أي قفزة مفاجئة ومين سببها، ويعطيك نصايح.
-- **معلومات الجهاز** كاملة مع شرح بسيط لكل شي.
-- **يشتغل جنب الساعة**: إذا سكّرت النافذة يكمل يراقب الرام، ويقدر يشتغل مع ويندوز.
-
-![مُحسّن الرام](docs/ram-ar.png)
-
-### التحميل
-
-1. نزّل `Faddi.exe` من [آخر إصدار](https://github.com/sox29-ui/Faddi/releases/latest). يشتغل على ويندوز 10 و11 (64-bit) بدون تثبيت.
-2. افتحه، والفحص يبدأ على طول.
-3. لو طلع تحذير SmartScreen لأن البرنامج ما عليه توقيع رقمي، اضغط **More info** ثم **Run anyway**.
-4. اختياري: اضغط **شغّل كمسؤول** تحت في القائمة عشان يقرأ المجلدات المحمية ويوريك حرارة القرص وعمره ويفضّي كاش ويندوز.
-
-### آمن
-
-- ما ينحذف شي إلا لما تضغط «نظّف المحدد» وتأكد، وملفاتك الشخصية تروح لسلة المحذوفات.
-- ما يلحق الاختصارات والروابط (junctions)، وما يلمس مجلدات ويندوز والبرامج ومجلدات المستخدمين الأساسية.
-- ملفات النظام (pagefile والسبات ونقاط الاستعادة) ما تتغير إلا بأدوات ويندوز نفسها.
-- كل شي يبقى في جهازك، والبرنامج ما يرسل أي شي للإنترنت.
-
-### الرخصة
-
-[MIT](LICENSE)
-
-</div>
+Faddi is released under the [MIT License](LICENSE). The libraries it ships with keep their own licenses, listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
