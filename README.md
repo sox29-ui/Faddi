@@ -93,7 +93,7 @@ Everything stays on your PC. Faddi sends nothing over the network.
   </tr>
   <tr>
     <td><img src="docs/sys-en.png" alt="System info"><p align="center">System info, live</p></td>
-    <td><img src="docs/home-ar.png" alt="Home in Arabic"><p align="center">العربية, right to left</p></td>
+    <td><img src="docs/home-ar.png" alt="Home in Arabic"><p align="center">Arabic, right to left</p></td>
   </tr>
   <tr>
     <td><img src="docs/home-zh.png" alt="Home in Chinese"><p align="center">简体中文</p></td>
