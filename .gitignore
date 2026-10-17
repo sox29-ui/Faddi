@@ -1,0 +1,6 @@
+bin/
+obj/
+*.user
+.vs/
+# the built app sits next to the source for local use; releases carry it instead
+/Faddi.exe

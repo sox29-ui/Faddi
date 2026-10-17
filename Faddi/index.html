@@ -1,0 +1,1545 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Faddi</title>
+<style>
+:root {
+  --bg: #17191c;
+  --panel: #1f2226;
+  --panel-2: #282c31;
+  --line: #353a41;
+  --text: #ecebe7;
+  --muted: #a9a59e;
+  --faint: #77736d;
+  --sand: #ead9b0;
+  --safe: #62d0a2;
+  --dev: #72a9f3;
+  --games: #f0b44a;
+  --review: #c99ae6;
+  --system: #8b97a4;
+  --rest: #545c64;
+  --danger: #ff7c6d;
+  --age0: #61a7d2;
+  --age1: #6bbf99;
+  --age2: #d7bb62;
+  --age3: #c98b50;
+  --age4: #9f624b;
+  --ui: "Segoe UI", Tahoma, sans-serif;
+  --nums: Bahnschrift, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14.5px/1.65 var(--ui);
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  overflow: hidden;
+}
+button, input, select { font: inherit; color: inherit; }
+h1, h2, h3 { margin: 0; font-weight: 700; }
+h1 { font-size: 26px; line-height: 1.35; }
+h2 { font-size: 17px; line-height: 1.4; }
+h3 { font-size: 14.5px; }
+p { margin: 0; }
+code { font-family: Consolas, monospace; font-size: 12.5px; background: var(--panel-2); padding: 1px 6px; border-radius: 5px; }
+pre { font-family: Consolas, monospace; font-size: 12.5px; background: var(--bg); border: 1px solid var(--line); padding: 10px 12px; border-radius: 8px; margin: 8px 0; text-align: left; direction: ltr; }
+.num { font-family: var(--nums); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+:focus-visible { outline: 2px solid var(--sand); outline-offset: 2px; }
+svg { width: 18px; height: 18px; flex: none; }
+
+/* ---------- sidebar ---------- */
+.side {
+  background: var(--panel);
+  border-inline-end: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 14px 18px;
+  min-height: 0;
+}
+.brand { padding: 0 10px; }
+.brand b { display: block; font-size: 30px; line-height: 1.1; }
+.brand span { color: var(--muted); font-size: 12.5px; }
+.nav { display: grid; gap: 2px; }
+.nav button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  background: none;
+  padding: 9px 12px;
+  border-radius: 9px;
+  cursor: pointer;
+  color: var(--muted);
+  text-align: start;
+  font-size: 14.5px;
+}
+.nav button:hover { background: var(--panel-2); color: var(--text); }
+.nav button.on { background: var(--panel-2); color: var(--text); font-weight: 600; box-shadow: inset -3px 0 0 var(--sand); }
+.foot { margin-top: auto; display: grid; gap: 12px; padding: 0 6px; }
+.mini-row { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+.mini-row .num { color: var(--text); }
+.mini-act { border: 0; background: none; color: var(--sand); cursor: pointer; padding: 0 4px; font-size: 12.5px; font-weight: 600; }
+.mini-act:hover { text-decoration: underline; }
+.admin-on { display: flex; gap: 8px; align-items: center; color: var(--safe); font-size: 13px; }
+.foot .btn { justify-content: center; }
+.lang-sel { background: transparent; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); padding: 5px 8px; font-size: 13px; cursor: pointer; }
+.lang-sel option { background: var(--panel); color: var(--text); }
+
+/* ---------- shared ---------- */
+main { height: 100vh; overflow-y: auto; padding: 32px 40px 24px; min-width: 0; }
+.page { max-width: 1240px; padding-bottom: 80px; }
+.page-head { margin-bottom: 24px; max-width: 780px; }
+.page-head p { color: var(--muted); margin-top: 6px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+.panel > h2 { margin-bottom: 12px; }
+.panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 12px; }
+.sub { margin: 28px 0 12px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  padding: 8px 16px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.btn:hover { border-color: #50565e; }
+.btn.primary { background: var(--sand); border-color: var(--sand); color: #1e1a12; }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.danger { background: var(--danger); border-color: var(--danger); color: #2a1310; }
+.btn.ghost { background: transparent; }
+.btn.sm { padding: 5px 12px; font-size: 13px; }
+.btn.big { padding: 11px 26px; font-size: 15.5px; }
+.btn:disabled { opacity: .45; cursor: default; }
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--muted);
+}
+.icon-btn:hover { background: var(--panel-2); color: var(--text); }
+.icon-btn.danger:hover { color: var(--danger); }
+.bar { height: 6px; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--sand); border-radius: inherit; transition: width .5s; }
+.path { font-size: 12px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr; text-align: right; }
+.tag { font-size: 12px; padding: 1px 9px; border-radius: 99px; background: rgba(255, 124, 109, .12); color: var(--danger); white-space: nowrap; }
+.chip { display: inline-flex; gap: 6px; font-size: 12.5px; padding: 2px 10px; border-radius: 99px; background: var(--panel-2); margin-block-start: 4px; margin-inline-end: 6px; }
+.empty { padding: 70px 0; max-width: 520px; }
+.empty p { color: var(--muted); margin: 8px 0 18px; }
+.a0 { background-color: var(--age0); }
+.a1 { background-color: var(--age1); }
+.a2 { background-color: var(--age2); }
+.a3 { background-color: var(--age3); }
+.a4 { background-color: var(--age4); }
+.denied { background: repeating-linear-gradient(45deg, #3b4046 0 6px, #33383e 6px 12px); }
+
+table.list { width: 100%; border-collapse: collapse; }
+.list th { text-align: start; font-weight: 600; color: var(--muted); font-size: 12.5px; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.list td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.list tbody tr:hover td { background: rgba(255, 255, 255, .025); }
+.list .acts { text-align: end; white-space: nowrap; width: 1%; }
+.list small { display: block; font-size: 12px; }
+.list td.grow { width: 100%; max-width: 0; } /* the name column takes what is left and truncates */
+.list td:not(.grow) { white-space: nowrap; }
+.nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.name-btn { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 0; cursor: pointer; text-align: start; min-width: 0; max-width: 520px; }
+.name-btn:hover .nm { text-decoration: underline; text-underline-offset: 3px; }
+.name-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.pbar { width: 110px; height: 6px; background: var(--panel-2); border-radius: 99px; display: inline-block; vertical-align: middle; margin-inline-end: 10px; overflow: hidden; }
+.pbar i { display: block; height: 100%; background: var(--muted); border-radius: inherit; }
+.age { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+
+/* ---------- home: the disk strip ---------- */
+.disk { margin-bottom: 30px; }
+.disk-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 16px; }
+.disk-label { color: var(--muted); font-size: 14px; margin-bottom: 2px; }
+.disk-used { color: var(--muted); font-size: 15px; }
+.disk-used .big { font-size: 58px; line-height: 1; color: var(--text); font-weight: 600; font-variation-settings: "wdth" 82; margin-inline-end: 6px; }
+.disk-free { text-align: end; color: var(--muted); }
+.disk-free .num { display: block; font-size: 32px; line-height: 1.1; color: var(--sand); font-weight: 600; }
+.disk-free.low .num { color: var(--danger); }
+.strip { display: flex; height: 66px; gap: 3px; border-radius: 12px; overflow: hidden; }
+.seg {
+  flex: 1 1 0;
+  min-width: 5px;
+  border: 0;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  color: #191a1c;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  transition: flex-grow .9s cubic-bezier(.2, .7, .2, 1), filter .15s;
+}
+.seg:hover { filter: brightness(1.12); }
+.seg-safe { background: var(--safe); }
+.seg-dev { background: var(--dev); }
+.seg-games { background: var(--games); }
+.seg-review { background: var(--review); }
+.seg-system { background: var(--system); }
+.seg-rest { background: var(--rest); color: var(--text); }
+.seg-scanned { background: #c6ccd2; cursor: default; }
+.seg-pending { background: var(--panel-2); color: var(--muted); cursor: default; }
+.seg-free { background: var(--sand); cursor: default; }
+.strip.low .seg-free { animation: breathe 2.6s ease-in-out infinite; }
+@keyframes breathe { 50% { filter: brightness(1.3) saturate(1.2); } }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 12px; }
+.lg { display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; color: var(--muted); font-size: 13px; cursor: pointer; }
+.lg i { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+.lg bdi { color: var(--text); font-weight: 600; }
+.home-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 18px; margin-bottom: 30px; }
+.scan-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 8px 0 14px; }
+.scan-stats .num { display: block; font-size: 21px; font-weight: 600; line-height: 1.3; }
+.scan-stats span { color: var(--muted); font-size: 12.5px; }
+#scanBox p { margin: 6px 0 16px; }
+#scanBox .path { margin: 10px 0 16px; }
+.row-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.win { display: grid; grid-template-columns: 6px minmax(0, 1fr) auto 112px; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.win:first-of-type { border-top: 0; padding-top: 2px; }
+.win > i { width: 6px; height: 38px; border-radius: 3px; background: var(--c); }
+.win b { display: block; }
+.win small { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.win > .num { font-size: 21px; font-weight: 600; }
+.win .btn { justify-content: center; }
+.tops { display: grid; margin-top: 4px; }
+.top { display: grid; grid-template-columns: minmax(0, 2.4fr) minmax(0, 3fr) 92px auto; gap: 18px; align-items: center; padding: 10px 2px; border-top: 1px solid var(--line); }
+.top b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top small { color: var(--muted); font-size: 12.5px; }
+.top-bar { height: 8px; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
+.top-bar i { display: block; height: 100%; border-radius: inherit; background: var(--c); }
+.top > .num { font-weight: 600; text-align: end; }
+
+/* ---------- map ---------- */
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 2px; direction: ltr; margin-bottom: 8px; }
+.crumb { border: 0; background: none; color: var(--muted); padding: 2px 7px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.crumb:hover { background: var(--panel-2); color: var(--text); }
+.crumb:last-child { color: var(--text); font-weight: 700; }
+.crumbs .sep { color: var(--faint); }
+.map-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
+.map-head .title { display: flex; align-items: baseline; gap: 12px; }
+.map-head .title b { font-size: 20px; }
+.age-legend { display: flex; align-items: center; gap: 4px; font-size: 12.5px; color: var(--muted); }
+.age-legend i { width: 22px; height: 10px; border-radius: 2px; }
+.age-legend span { margin: 0 6px; }
+.treemap { position: relative; height: 440px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 22px; }
+.tile { position: absolute; padding: 5px 8px; overflow: hidden; color: #15140f; box-shadow: inset 0 0 0 1px var(--bg); font-size: 12.5px; line-height: 1.35; text-align: right; }
+.tile.dir { cursor: pointer; }
+.tile.dir:hover { filter: brightness(1.16); }
+.tile.file { background-image: linear-gradient(rgba(255, 255, 255, .22), rgba(255, 255, 255, .22)); }
+.tile.rest { background: var(--panel-2); color: var(--muted); }
+.tile.denied { color: var(--muted); }
+.tile b { display: block; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile .num { font-size: 12px; opacity: .85; }
+.note { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+
+/* ---------- cleanup ---------- */
+.grp { margin-bottom: 38px; }
+.grp-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--c); }
+.grp-head h2 { font-size: 21px; }
+.grp-head p { color: var(--muted); margin-top: 4px; max-width: 680px; }
+.grp-head .num { font-size: 32px; font-weight: 600; color: var(--c); line-height: 1; white-space: nowrap; }
+.sug { padding: 14px 0 12px; border-bottom: 1px solid var(--line); }
+.sug-head { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto auto; align-items: center; gap: 12px; }
+.sug-title { border: 0; background: none; padding: 0; text-align: start; cursor: pointer; min-width: 0; }
+.sug-title b { font-size: 15.5px; }
+.sug-title small { display: block; color: var(--muted); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sug-head > .num { font-size: 18px; font-weight: 600; white-space: nowrap; }
+.sug .desc { color: var(--muted); font-size: 13.5px; margin: 6px 0 8px; margin-inline-start: 36px; max-width: 760px; }
+.items { margin-inline-start: 36px; }
+.item { display: grid; grid-template-columns: 24px minmax(0, 1fr) 110px 84px auto; align-items: center; gap: 12px; padding: 5px 0; }
+.item:nth-child(n+4) { display: none; }
+.sug.open .item { display: grid; }
+.item-name { min-width: 0; }
+.item-name b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
+.item-name small { display: block; color: var(--faint); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr; text-align: right; }
+.item-name em { font-style: normal; font-size: 12px; color: var(--games); }
+.item > .num { text-align: end; font-weight: 600; }
+.item .acts { display: flex; gap: 4px; justify-content: flex-end; align-items: center; }
+.more { border: 0; background: none; color: var(--sand); cursor: pointer; padding: 4px 0; font-size: 13px; margin-inline-start: 36px; }
+.sug.open .more { display: none; }
+.chk { width: 18px; height: 18px; margin: 0; accent-color: var(--sand); cursor: pointer; }
+.clean-bar {
+  position: sticky;
+  bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-top: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+}
+.clean-bar .big { font-size: 24px; font-weight: 600; color: var(--sand); }
+.clean-bar small { display: block; color: var(--muted); font-size: 12.5px; }
+
+/* ---------- files ---------- */
+.types { display: grid; gap: 2px; margin-bottom: 8px; }
+.type {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr) 92px 110px;
+  gap: 14px;
+  align-items: center;
+  border: 0;
+  background: none;
+  padding: 5px 8px;
+  border-radius: 8px;
+  text-align: start;
+  cursor: pointer;
+}
+.type:hover { background: var(--panel); }
+.type.on { background: var(--panel-2); }
+.type .tb { height: 10px; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
+.type .tb i { display: block; height: 100%; background: var(--sand); border-radius: inherit; }
+.type .num { text-align: end; }
+.filter-row { display: flex; align-items: center; gap: 14px; }
+
+/* ---------- duplicates ---------- */
+.dup { border-top: 1px solid var(--line); padding: 14px 0; }
+.dup header { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
+.dup header span { color: var(--sand); }
+.dup-file { display: grid; grid-template-columns: minmax(0, 1fr) 110px auto auto; gap: 10px; align-items: center; padding: 2px 0; }
+.dup-file .path { font-size: 13px; color: var(--text); }
+.lead { font-size: 17px; margin-bottom: 14px; }
+
+/* ---------- apps ---------- */
+.search { background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; width: 340px; max-width: 100%; margin-bottom: 14px; }
+
+/* ---------- ram: optimizer ---------- */
+.opt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 38px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 26px 30px; margin-bottom: 18px; }
+.gauge { position: relative; width: 176px; height: 176px; }
+.gauge svg { width: 176px; height: 176px; transform: rotate(-90deg); }
+.gauge circle { fill: none; stroke-width: 14; }
+.gauge .track { stroke: var(--panel-2); }
+.gauge .fill { stroke: var(--c); stroke-linecap: round; transition: stroke-dasharray .8s cubic-bezier(.2, .7, .2, 1), stroke .4s; }
+.gauge .mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.gauge .mid .num { font-size: 42px; font-weight: 600; line-height: 1; font-variation-settings: "wdth" 82; }
+.gauge .mid small { color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+.opt-info h2 { font-size: 22px; }
+.opt-info p { color: var(--muted); margin: 6px 0 14px; max-width: 640px; }
+.opt-stats { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-bottom: 16px; color: var(--muted); font-size: 13.5px; }
+.opt-stats bdi { color: var(--text); font-weight: 600; }
+.opt-result { margin-inline-start: 14px; color: var(--sand); font-weight: 600; font-size: 16px; }
+.opt-hist { margin-top: 12px; font-size: 12.5px; color: var(--faint); }
+.opt-set { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 26px; }
+.opt-set h3 { margin-bottom: 8px; }
+.check { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; cursor: pointer; font-size: 13.5px; line-height: 1.55; }
+.check .chk { margin-top: 2px; flex: none; }
+.check select { background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 0 4px; margin: 0 4px; cursor: pointer; }
+.check.off { opacity: .55; cursor: default; }
+
+/* ---------- ram: monitor ---------- */
+.ram-top { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 40px; align-items: center; margin-bottom: 26px; }
+.ram-big .big { font-size: 56px; font-weight: 600; line-height: 1; font-variation-settings: "wdth" 82; }
+.ram-big .unit { font-size: 20px; color: var(--muted); margin-inline-start: 6px; }
+.ram-big small { display: block; color: var(--muted); margin-top: 6px; }
+.membar { display: flex; height: 28px; border-radius: 8px; overflow: hidden; gap: 2px; }
+.membar span { flex: 1 1 0; min-width: 3px; }
+.memlegend { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+.memlegend span { display: inline-flex; align-items: center; gap: 6px; cursor: help; }
+.memlegend i { width: 10px; height: 10px; border-radius: 3px; }
+.memlegend bdi { color: var(--text); font-weight: 600; }
+.chart { width: 100%; height: 230px; display: block; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; margin: 18px 0; }
+.spike, .tip { padding: 10px 0; border-top: 1px solid var(--line); }
+.spike:first-child, .tip:first-child { border-top: 0; padding-top: 0; }
+.tip b { color: var(--text); }
+.tip { color: var(--muted); }
+
+/* ---------- system ---------- */
+.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-bottom: 24px; }
+.tilebox { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px 12px; min-width: 0; }
+.tilebox h3 { font-size: 13.5px; color: var(--muted); font-weight: 600; }
+.tilebox .v { display: block; font-size: 30px; font-weight: 600; line-height: 1.25; }
+.tilebox small { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tilebox canvas { width: 100%; height: 42px; display: block; margin-top: 8px; }
+.cores { display: flex; gap: 3px; align-items: flex-end; height: 30px; margin-top: 8px; }
+.cores i { flex: 1; background: var(--dev); border-radius: 2px; min-height: 2px; }
+.sections { columns: 2 400px; column-gap: 18px; }
+.sect { break-inside: avoid; display: inline-block; width: 100%; margin-bottom: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.sect > h2 { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.card + .card { border-top: 1px dashed var(--line); margin-top: 12px; padding-top: 12px; }
+.card h3 { margin-bottom: 6px; }
+.kv { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 3px 14px; font-size: 13.5px; margin: 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; overflow-wrap: anywhere; text-align: right; }
+.hint { color: var(--faint); cursor: help; margin-inline-start: 5px; font-size: 12px; }
+.sect .btn { margin-top: 12px; }
+
+/* ---------- dialogs ---------- */
+.modal-back { position: fixed; inset: 0; background: rgba(10, 11, 13, .66); display: grid; place-items: center; z-index: 50; }
+.modal { width: min(580px, calc(100vw - 40px)); max-height: calc(100vh - 80px); overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px 26px; }
+.modal h2 { font-size: 20px; margin-bottom: 12px; }
+.modal p { margin: 8px 0; color: var(--muted); }
+.modal p b, .modal p .num { color: var(--text); }
+.modal .acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.modal .bar { margin: 14px 0 8px; }
+.modal .result { font-size: 30px; color: var(--sand); font-weight: 600; }
+.sumlist { list-style: none; padding: 0; margin: 4px 0 14px; }
+.sumlist li { display: flex; justify-content: space-between; gap: 14px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+.fail { font-size: 12px; color: var(--faint); padding-inline-start: 18px; max-height: 160px; overflow: auto; text-align: left; }
+details summary { cursor: pointer; color: var(--muted); margin-top: 8px; }
+.toast {
+  position: fixed;
+  bottom: 22px;
+  inset-inline-end: 22px;
+  max-width: 440px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 16px;
+  z-index: 60;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .2s, transform .2s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: none; }
+.toast.err { border-color: var(--danger); }
+
+/* ---------- left-to-right languages ---------- */
+[dir=ltr] .nav button.on { box-shadow: inset 3px 0 0 var(--sand); }
+[dir=ltr] .nm, [dir=ltr] .tile, [dir=ltr] .item-name b, [dir=ltr] .item-name small, [dir=ltr] .kv dd, [dir=ltr] .path { text-align: left; }
+[dir=ltr] .crumbs { justify-content: flex-start; }
+
+@media (max-width: 1180px) {
+  .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .home-grid, .two, .opt-set { grid-template-columns: minmax(0, 1fr); }
+  main { padding: 26px 26px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<aside class="side">
+  <div class="brand"><b id="brandName"></b><span id="brandLine"></span></div>
+  <nav class="nav" id="nav"></nav>
+  <div class="foot" id="foot"></div>
+</aside>
+<main id="main"></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const main = $('#main');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ---------- bridge to the C# side ----------
+let seq = 0;
+const waiting = new Map();
+window.chrome.webview.addEventListener('message', e => {
+  const m = e.data, w = waiting.get(m.id);
+  if (!w) return;
+  waiting.delete(m.id);
+  m.ok ? w.resolve(m.data) : w.reject(new Error(m.error || t('صار خطأ غير متوقع')));
+});
+const api = (cmd, args = {}) => new Promise((resolve, reject) => {
+  const id = ++seq;
+  waiting.set(id, { resolve, reject });
+  window.chrome.webview.postMessage({ id, cmd, args });
+});
+
+// ---------- language: Arabic is the source text, other languages map it ----------
+let LANG = 'ar', DICT = {}, LANGS = [];
+const t = (s, ...a) => (DICT[s] ?? s).replace(/\{(\d+)\}/g, (_, i) => a[+i] ?? '');
+function applyLang(info) {
+  LANG = info.lang;
+  DICT = info.dict || {};
+  LANGS = info.available;
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = info.rtl ? 'rtl' : 'ltr';
+  $('#brandName').textContent = t('فضّي');
+  $('#brandLine').textContent = t('حلّل جهازك وفضّي مساحتك');
+  $('#nav').innerHTML = NAV.map(([k, label]) => `<button data-act="go" data-page="${k}" class="${S.page === k ? 'on' : ''}">${ICON[k]}<span>${t(label)}</span></button>`).join('');
+}
+const rtl = () => document.documentElement.dir === 'rtl';
+
+// ---------- formatting ----------
+const GB = 2 ** 30;
+function size(b) {
+  if (b == null || isNaN(b)) return '—';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let v = Math.abs(b), i = 0;
+  while (v >= 1024 && i < 4) { v /= 1024; i++; }
+  return (b < 0 ? '-' : '') + (i < 2 || v >= 100 ? Math.round(v) : v.toFixed(1)) + ' ' + units[i];
+}
+const bdi = s => `<bdi class="num">${s}</bdi>`;
+const rate = b => size(b) + '/s';
+const n = x => Number(x || 0).toLocaleString('en-US');
+const pct = (a, b) => (b > 0 ? Math.min(100, Math.max(0, a / b * 100)) : 0);
+const ftMs = ft => (ft ? ft / 1e4 - 11644473600000 : 0);
+const days = ft => (ft ? (Date.now() - ftMs(ft)) / 864e5 : null);
+function ago(ft) {
+  const d = days(ft);
+  if (d == null) return '';
+  if (d < 0) return t('حديث');
+  if (d < 1) return t('اليوم');
+  if (d < 2) return t('أمس');
+  const [k, unit] = d < 30 ? [Math.floor(d), 'day'] : d < 365 ? [Math.max(1, Math.floor(d / 30.4)), 'month'] : [Math.floor(d / 365), 'year'];
+  if (LANG !== 'ar') return new Intl.RelativeTimeFormat(LANG).format(-k, unit);
+  const words = { day: ['يوم', 'يومين', 'أيام', 'يوم'], month: ['شهر', 'شهرين', 'شهور', 'شهر'], year: ['سنة', 'سنتين', 'سنين', 'سنة'] }[unit];
+  return 'قبل ' + (k <= 1 ? words[0] : k === 2 ? words[1] : k <= 10 ? `${k} ${words[2]}` : `${k} ${words[3]}`);
+}
+function ageClass(ft) {
+  const d = days(ft);
+  return d == null || d < 30 ? 'a0' : d < 182 ? 'a1' : d < 365 ? 'a2' : d < 730 ? 'a3' : 'a4';
+}
+const clock = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+const SPECIAL = { '::bin': 'سلة المحذوفات', '::restore': 'إعدادات حماية النظام', '::cleanmgr': 'تنظيف القرص (Disk Cleanup)', '::hidden': 'مجلدات محمية' };
+const leaf = p => (SPECIAL[p] ? t(SPECIAL[p]) : p.split('\\').filter(Boolean).pop() || p);
+const parentOf = p => (p.startsWith('::') ? '' : p.slice(0, p.lastIndexOf('\\')));
+const join = (dir, name) => (dir.endsWith('\\') ? dir + name : dir + '\\' + name);
+const under = (p, d) => {
+  p = p.toLowerCase(); d = d.toLowerCase();
+  return p.length > d.length ? p.startsWith(d) && (d.endsWith('\\') || p[d.length] === '\\') : p === d;
+};
+const fmtDate = s => (s && /^\d{8}$/.test(s) ? `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6)}` : '');
+function timeLabel(iso) { // returns HTML
+  const tm = new Date(iso), today = new Date().toDateString() === tm.toDateString();
+  let time = tm.toLocaleTimeString(LANG === 'ar' ? 'en-US' : LANG, { hour: 'numeric', minute: '2-digit' });
+  if (LANG === 'ar') time = time.replace('AM', 'ص').replace('PM', 'م');
+  return t('{0} الساعة {1}', today ? t('اليوم') : bdi(tm.toLocaleDateString('en-GB')), bdi(time));
+}
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+const ICON = {
+  home: svg('M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z'),
+  map: svg('M3 4h10v9H3zM13 4h8v5h-8zM13 9h8v11h-8zM3 13h10v7H3z'),
+  clean: svg('M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M6.3 17.7l2.8-2.8M14.9 9.1l2.8-2.8'),
+  files: svg('M4 6h16M4 12h16M4 18h11'),
+  dupes: svg('M9 9h11v11H9zM5 15H4V4h11v1'),
+  apps: svg('M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z'),
+  ram: svg('M3 12h4l3-7 4 14 3-7h4'),
+  sys: svg('M7 7h10v10H7zM10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4'),
+  folder: svg('M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'),
+  trash: svg('M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3'),
+  up: svg('M12 19V5M5 12l7-7 7 7'),
+  shield: svg('M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z'),
+};
+const NAV = [['home', 'الرئيسية'], ['map', 'خريطة المساحة'], ['clean', 'التنظيف'], ['files', 'أكبر الملفات'],
+  ['dupes', 'الملفات المكررة'], ['apps', 'البرامج المثبتة'], ['ram', 'الرام والأداء'], ['sys', 'معلومات الجهاز']];
+
+const GROUPS = {
+  safe: { name: 'تنظيف آمن', short: 'كاش ومؤقتة', desc: 'ملفات مؤقتة وكاش. حذفها ما يضر، والبرامج ترجع تسويها لحالها وقت الحاجة.' },
+  dev: { name: 'مخلفات البرمجة', short: 'مخلفات برمجة', desc: 'حزم ومكتبات ومجلدات بناء ترجع بأمر واحد مثل npm install.' },
+  games: { name: 'ألعاب وبرامج كبيرة', short: 'ألعاب وبرامج', desc: 'لو ما تستخدمها، إلغاء تثبيتها يفضّي مساحة ضخمة.' },
+  review: { name: 'أشياء قديمة وكبيرة', short: 'قديمة وكبيرة', desc: 'ما نقدر نقرر عنك، نوريك وينها وأنت تحكم. اللي تحذفه هنا يروح لسلة المحذوفات.' },
+  system: { name: 'ملفات النظام', short: 'ويندوز والنظام', desc: 'ملفات ويندوز. لا تحذفها يدوياً؛ بعضها يصغر بأدوات ويندوز نفسها.' },
+  rest: { name: 'باقي الملفات', short: 'باقي الملفات', desc: 'ملفاتك وبرامجك اللي ما عليها ملاحظات. تلقاها في خريطة المساحة.' },
+};
+const BATCH = new Set(['contents', 'folder', 'recycle', 'bin']);
+const KINDS = {
+  video: 'فيديو', image: 'صور', audio: 'صوتيات', archive: 'أرشيفات مضغوطة', installer: 'ملفات تثبيت وبرامج', disk: 'أقراص وهمية وصور أنظمة',
+  game: 'ملفات ألعاب', code: 'كود ومشاريع', binary: 'مكتبات وملفات تشغيل', doc: 'مستندات', data: 'قواعد بيانات وسجلات',
+  model: 'موديلات ذكاء اصطناعي', none: 'بدون امتداد (كاش وبيانات)', other: 'أنواع ثانية',
+};
+const PROC = {
+  chrome: 'متصفح Chrome. كل تبويب وإضافة عملية لحالها', msedge: 'متصفح Edge', firefox: 'متصفح Firefox', brave: 'متصفح Brave', opera: 'متصفح Opera',
+  msedgewebview2: 'محرك ويب تستخدمه برامج كثيرة مثل Teams وClaude والويدجتس', vmmem: 'آلة افتراضية (WSL أو Docker أو Hyper-V)',
+  vmmemwsl: 'آلة WSL الافتراضية. تحجز رام كثيرة وما ترجعها بسرعة', 'memory compression': 'رام مضغوطة: ويندوز يضغط الأشياء القليلة الاستخدام بدل ما يكتبها على القرص',
+  msmpeng: 'برنامج الحماية Windows Defender', explorer: 'مستكشف الملفات وشريط المهام', dwm: 'رسم النوافذ والشفافية في ويندوز',
+  svchost: 'خدمات ويندوز، كل مجموعة خدمات في نسخة', system: 'نواة ويندوز والتعريفات', searchindexer: 'فهرسة البحث في ويندوز',
+  code: 'Visual Studio Code', devenv: 'Visual Studio', node: 'Node.js: سيرفرات التطوير وأدوات JavaScript', java: 'Java: غالباً Gradle أو Android Studio أو Minecraft',
+  javaw: 'Java: غالباً Gradle أو Minecraft', studio64: 'Android Studio', 'qemu-system-x86_64': 'محاكي أندرويد', unity: 'محرر Unity', 'unity hub': 'Unity Hub',
+  unrealeditor: 'محرر Unreal', python: 'بايثون', pythonw: 'بايثون', dotnet: '.NET', 'docker desktop': 'Docker Desktop', 'com.docker.backend': 'Docker',
+  discord: 'Discord', spotify: 'Spotify', steam: 'Steam', steamwebhelper: 'واجهة Steam (متصفح داخلي)', epicgameslauncher: 'Epic Games Launcher',
+  riotclientservices: 'Riot Client', vgc: 'Riot Vanguard (حماية Valorant)', fivem: 'FiveM', claude: 'تطبيق Claude', onedrive: 'OneDrive',
+  'ms-teams': 'Microsoft Teams', whatsapp: 'واتساب', telegram: 'تيليجرام', mysqld: 'قاعدة بيانات MySQL (XAMPP)', mongod: 'قاعدة بيانات MongoDB، شغّالة كخدمة دايماً',
+  faddi: 'هذا البرنامج (فضّي)', audiodg: 'معالجة الصوت في ويندوز', lsass: 'أمان ويندوز وتسجيل الدخول', csrss: 'من أساسيات ويندوز',
+  wininit: 'من أساسيات ويندوز', winlogon: 'من أساسيات ويندوز', services: 'مدير خدمات ويندوز', smss: 'من أساسيات ويندوز', registry: 'سجل ويندوز',
+  spoolsv: 'خدمة الطابعة', ctfmon: 'لوحة المفاتيح واللغات', textinputhost: 'لوحة الكتابة والإيموجي', searchhost: 'بحث ويندوز',
+  startmenuexperiencehost: 'قائمة ابدأ', widgets: 'الويدجتس', phoneexperiencehost: 'ربط الجوال', razercortex: 'Razer Cortex', nvcontainer: 'خدمات NVIDIA',
+  avgsvc: 'برنامج الحماية AVG', avgui: 'برنامج الحماية AVG', wmiprvse: 'معلومات النظام (WMI)', 'nvidia app': 'تطبيق NVIDIA', gta5: 'GTA V',
+};
+const UNTOUCHABLE = new Set(['system', 'idle', 'registry', 'smss', 'csrss', 'wininit', 'winlogon', 'services', 'lsass', 'lsaiso', 'svchost', 'dwm',
+  'fontdrvhost', 'memory compression', 'msmpeng', 'secure system', 'sihost', 'ctfmon', 'wmiprvse', 'audiodg', 'faddi', 'msedgewebview2', 'explorer',
+  'vmmem', 'vmmemwsl', 'vmcompute', 'vmwp']);
+
+// ---------- state ----------
+const S = {
+  page: 'home', init: null, scan: null, sug: null, live: null, sel: new Set(), open: new Set(),
+  map: null, files: null, types: null, kind: 'all', dupes: null, dupesAsked: false, apps: null, query: '', ram: null, sys: null, opt: null,
+  spark: { cpu: [], gpu: [], disk: [], net: [] },
+};
+const sysDrive = () => S.init?.drives.find(d => d.name.toUpperCase() === S.init.system.toUpperCase()) ?? S.init?.drives[0];
+const allItems = () => (S.sug ? S.sug.groups.flatMap(g => g.items.map(i => ({ ...i, group: g.group, title: g.title }))) : []);
+
+// Every byte once: an item inside an already counted folder is skipped.
+function uniq(items) {
+  const kept = [];
+  for (const i of [...items].sort((a, b) => a.path.length - b.path.length))
+    if (!kept.some(k => under(i.path, k.path))) kept.push(i);
+  return kept.reduce((s, i) => s + i.size, 0);
+}
+
+// ---------- pages ----------
+const PAGES = {};
+let pageTimer = 0;
+async function go(page) {
+  S.page = page;
+  clearInterval(pageTimer);
+  $$('#nav button').forEach(b => b.classList.toggle('on', b.dataset.page === page));
+  main.scrollTop = 0;
+  draw();
+  try { await PAGES[page].load?.(); } catch (e) { toast(e.message, true); }
+  if (S.page === page) draw();
+}
+function draw() {
+  const p = PAGES[S.page];
+  main.innerHTML = `<div class="page">${p.render()}</div>`;
+  p.after?.();
+}
+const head = (title, line) => `<div class="page-head"><h1>${title}</h1><p>${line}</p></div>`;
+const waitScan = (title, line) => `<div class="empty"><h1>${title}</h1><p>${line}</p>${
+  !S.scan || S.scan.phase === 'idle' ? `<button class="btn primary" data-act="scan">${t('ابدأ الفحص')}</button>` : `<button class="btn" data-act="go" data-page="home">${t('شوف تقدّم الفحص')}</button>`}</div>`;
+
+// ----- home -----
+PAGES.home = {
+  render() {
+    const d = sysDrive();
+    if (!d) return '';
+    const used = d.total - d.free, low = d.free < d.total * 0.1;
+    return `
+      <section class="disk">
+        <div class="disk-row">
+          <div>
+            <div class="disk-label">${t('القرص {0}', esc(d.name.replace('\\', '')))}${d.label ? ' (' + esc(d.label) + ')' : ''}</div>
+            <div class="disk-used"><bdi class="num big">${size(used)}</bdi>${t('مستخدمة من {0}', bdi(size(d.total)))}</div>
+          </div>
+          <div class="disk-free ${low ? 'low' : ''}"><bdi class="num">${size(d.free)}</bdi>${low ? t('فاضي بس، ويندوز يحتاج 10% على الأقل') : t('فاضي')}</div>
+        </div>
+        <div class="strip ${low ? 'low' : ''}" id="strip">${strip()}</div>
+        <div class="legend" id="legend">${legend()}</div>
+      </section>
+      <div class="home-grid">
+        <section class="panel" id="scanBox">${scanBox()}</section>
+        <section class="panel" id="winBox">${winBox()}</section>
+      </div>
+      <section id="topBox">${topBox()}</section>`;
+  },
+};
+
+function segments() {
+  const d = sysDrive(), used = d.total - d.free, sc = S.scan;
+  let segs;
+  if (S.sug && sc?.phase === 'done') {
+    const tot = S.sug.totals;
+    segs = ['games', 'dev', 'safe', 'review', 'system', 'rest'].filter(k => tot[k] > 0).map(k => ({ k, size: tot[k], label: t(GROUPS[k].short) }));
+  } else if (sc && sc.phase !== 'idle') {
+    const done = Math.min(sc.size, used);
+    segs = [{ k: 'scanned', size: done, label: t('اتفحص') }, { k: 'pending', size: used - done, label: t('لسه') }];
+  } else segs = [{ k: 'pending', size: used, label: t('مستخدم') }];
+  return [...segs, { k: 'free', size: d.free, label: t('فاضي') }];
+}
+function strip() {
+  const total = sysDrive().total;
+  return segments().map(s => `<button class="seg seg-${s.k}" style="flex-grow:${Math.max(s.size, total * 0.004)}" data-act="seg" data-k="${s.k}"
+    title="${esc((GROUPS[s.k] ? t(GROUPS[s.k].name) : s.label) + ': ' + size(s.size))}" tabindex="${GROUPS[s.k] ? 0 : -1}">${s.size > total * 0.07 ? esc(s.label) : ''}</button>`).join('');
+}
+function legend() {
+  const colors = { scanned: '#c6ccd2', pending: 'var(--panel-2)', free: 'var(--sand)' };
+  return segments().map(s => `<button class="lg" data-act="seg" data-k="${s.k}" style="--c:${colors[s.k] || `var(--${s.k})`}"><i></i>${esc(s.label)} <bdi class="num">${size(s.size)}</bdi></button>`).join('');
+}
+function scanBox() {
+  const sc = S.scan;
+  if (!sc || sc.phase === 'idle')
+    return `<h2>${t('نبدأ بالفحص')}</h2><p class="muted">${t('نقرأ القرص كامل ونطلع لك وش ماكل المساحة. الفحص قراءة بس، وما نحذف شي إلا لما تأكد.')}</p><button class="btn primary" data-act="scan">${t('ابدأ الفحص')}</button>`;
+  if (sc.phase === 'scanning' || sc.phase === 'analyzing')
+    return `<h2>${sc.phase === 'scanning' ? t('نفحص القرص…') : t('نرتّب النتايج…')}</h2>
+      <div class="scan-stats">
+        <div><bdi class="num">${n(sc.files)}</bdi><span>${t('ملف')}</span></div>
+        <div><bdi class="num">${n(sc.dirs)}</bdi><span>${t('مجلد')}</span></div>
+        <div><bdi class="num">${size(sc.size)}</bdi><span>${t('انحسبت')}</span></div>
+        <div><bdi class="num">${clock(sc.seconds)}</bdi><span>${t('الوقت')}</span></div>
+      </div>
+      <div class="bar"><i style="width:${pct(sc.size, sc.used)}%"></i></div>
+      <div class="path">${esc(sc.current || '')}</div>
+      ${sc.phase === 'scanning' ? `<button class="btn" data-act="stopScan">${t('وقّف الفحص')}</button>` : ''}`;
+  return `<h2>${sc.phase === 'stopped' ? t('وقّفت الفحص') : t('خلص الفحص')}</h2>
+    <p class="muted">${t('قرينا {0} ملف في {1}', bdi(n(sc.files)), bdi(clock(sc.seconds)))}${sc.denied ? t('، وفيه {0} مجلد محمي ما قدرنا نفتحه', bdi(n(sc.denied))) : ''}.${sc.phase === 'stopped' ? ' ' + t('النتايج ناقصة لين تفحص للآخر.') : ''}</p>
+    <div class="row-btns"><button class="btn" data-act="scan">${t('افحص من جديد')}</button>${!S.init.admin && sc.denied ? `<button class="btn ghost" data-act="admin">${ICON.shield}${t('شغّل كمسؤول عشان نقرا الكل')}</button>` : ''}</div>`;
+}
+function winBox() {
+  if (!S.sug) return `<h2>${t('وش تقدر تفضّي')}</h2><p class="muted">${t('نطلعها لك هنا أول ما يخلص الفحص، مرتبة من الأكثر أمان للأقل.')}</p>`;
+  const tot = S.sug.totals;
+  return `<h2>${t('وش تقدر تفضّي')}</h2>` + ['safe', 'dev', 'games', 'review'].filter(k => tot[k] > 0).map(k => `
+    <div class="win" style="--c:var(--${k})">
+      <i></i>
+      <div><b>${t(GROUPS[k].name)}</b><small>${t(GROUPS[k].desc)}</small></div>
+      <bdi class="num">${size(tot[k])}</bdi>
+      ${k === 'safe' ? `<button class="btn primary" data-act="quickClean">${t('نظّف الحين')}</button>` : `<button class="btn" data-act="goGroup" data-k="${k}">${t('راجعها')}</button>`}
+    </div>`).join('');
+}
+function topBox() {
+  if (!S.sug) return '';
+  const items = allItems().filter(i => i.group !== 'system' && i.size > 0).sort((a, b) => b.size - a.size).slice(0, 12);
+  if (!items.length) return '';
+  const max = items[0].size;
+  return `<h2>${t('أكبر الأشياء اللي تقدر تتصرف فيها')}</h2><div class="tops">${items.map(i => `
+    <div class="top" style="--c:var(--${i.group})">
+      <div><b dir="auto">${esc(leaf(i.path))}</b><small>${esc(i.title)}${i.newest ? t('، آخر تعديل {0}', ago(i.newest)) : ''}</small></div>
+      <div class="top-bar"><i style="width:${pct(i.size, max)}%"></i></div>
+      <bdi class="num">${size(i.size)}</bdi>
+      <button class="btn ghost sm" data-act="goGroup" data-k="${i.group}" data-key="${esc(i.key)}">${t('اعرض')}</button>
+    </div>`).join('')}</div>`;
+}
+
+// ----- space map -----
+PAGES.map = {
+  async load() {
+    if (S.scan && S.scan.phase !== 'idle') S.map = await api('children', { id: S.map?.id ?? 0 });
+  },
+  render() {
+    if (!S.scan || S.scan.phase === 'idle') return waitScan(t('خريطة المساحة'), t('ابدأ الفحص وتطلع لك خريطة القرص كامل هنا.'));
+    const top = head(t('خريطة المساحة'), t('كل مربع مجلد أو ملف، وحجمه على قد المساحة اللي ياخذها. اضغط على أي مجلد عشان تدخله، واللون يقول متى آخر مرة تعدّل فيه شي.'));
+    const m = S.map;
+    if (!m) return top + `<p class="muted">${t('نجهز الخريطة…')}</p>`;
+    const crumbs = m.crumbs.map(c => `<button class="crumb" data-act="dir" data-id="${c.id}" dir="auto">${esc(c.name)}</button>`).join('<span class="sep">›</span>');
+    const parent = m.crumbs.length > 1 ? m.crumbs[m.crumbs.length - 2].id : null;
+    const busy = ['scanning', 'analyzing'].includes(S.scan.phase);
+    return top + `
+      ${busy ? `<p class="note">${t('الفحص لسه شغال، فالأرقام تكبر. ارجع للمجلد بعدين وتلقاها كاملة.')}</p>` : ''}
+      ${m.crumbs.length > 1 ? `<div class="crumbs">${crumbs}</div>` : ''}
+      <div class="map-head">
+        <div class="title">${parent != null ? `<button class="icon-btn" data-act="dir" data-id="${parent}" title="${t('ارجع للمجلد اللي فوق')}" aria-label="${t('ارجع للمجلد اللي فوق')}">${ICON.up}</button>` : ''}
+          <b dir="auto">${esc(leaf(m.path))}</b><bdi class="num">${size(m.size)}</bdi><span class="muted">${t('{0} ملف', bdi(n(m.files)))}</span></div>
+        <div class="age-legend"><span>${t('انلمس حديثاً')}</span><i class="a0"></i><i class="a1"></i><i class="a2"></i><i class="a3"></i><i class="a4"></i><span>${t('له سنين ما انلمس')}</span></div>
+      </div>
+      <div class="treemap" id="tm"></div>
+      <table class="list">
+        <thead><tr><th>${t('الاسم')}</th><th>${t('الحجم')}</th><th>${t('من المجلد')}</th><th>${t('الملفات')}</th><th>${t('آخر تعديل')}</th><th></th></tr></thead>
+        <tbody>${m.items.slice(0, 250).map(i => mapRow(i, m)).join('')}</tbody>
+      </table>
+      ${m.more ? `<p class="note">${t('و{0} عنصر صغير ثاني ({1}).', bdi(n(m.more.count)), bdi(size(m.more.size)))}</p>` : ''}`;
+  },
+  after() { drawTreemap(); },
+};
+function mapRow(i, m) {
+  const path = join(m.path, i.name);
+  const sw = `<span class="sw ${i.denied ? 'denied' : ageClass(i.newest)}"></span><span class="nm" dir="auto">${esc(i.name)}</span>${i.denied ? `<span class="tag">${t('محمي')}</span>` : ''}`;
+  return `<tr>
+    <td class="grow">${i.dir ? `<button class="name-btn" data-act="dir" data-id="${i.id}">${sw}</button>` : `<div class="name-cell">${sw}</div>`}</td>
+    <td><bdi class="num">${size(i.size)}</bdi></td>
+    <td><span class="pbar"><i style="width:${pct(i.size, m.size)}%"></i></span><bdi class="num">${pct(i.size, m.size).toFixed(1)}%</bdi></td>
+    <td><bdi class="num">${i.dir ? n(i.files) : ''}</bdi></td>
+    <td class="age">${ago(i.newest)}</td>
+    <td class="acts"><button class="icon-btn" data-act="reveal" data-path="${esc(path)}" title="${t('افتحه في مستكشف الملفات')}" aria-label="${t('افتحه في مستكشف الملفات')}">${ICON.folder}</button><button class="icon-btn danger" data-act="recycle" data-path="${esc(path)}" data-size="${i.size}" title="${t('انقله لسلة المحذوفات')}" aria-label="${t('انقله لسلة المحذوفات')}">${ICON.trash}</button></td>
+  </tr>`;
+}
+function squarify(items, W, H) {
+  const total = items.reduce((s, i) => s + i.size, 0);
+  if (!total || W <= 0 || H <= 0) return [];
+  const out = [];
+  let x = 0, y = 0, w = W, h = H, row = [];
+  const worst = (r, side) => {
+    let s = 0, max = 0, min = Infinity;
+    for (const c of r) { s += c.area; max = Math.max(max, c.area); min = Math.min(min, c.area); }
+    return Math.max(side * side * max / (s * s), (s * s) / (side * side * min));
+  };
+  const flush = () => {
+    const s = row.reduce((a, c) => a + c.area, 0);
+    if (w >= h) {
+      const cw = s / h;
+      let cy = y;
+      for (const c of row) { const ch = c.area / cw; out.push({ ...c, x, y: cy, w: cw, h: ch }); cy += ch; }
+      x += cw; w -= cw;
+    } else {
+      const ch = s / w;
+      let cx = x;
+      for (const c of row) { const cw = c.area / ch; out.push({ ...c, x: cx, y, w: cw, h: ch }); cx += cw; }
+      y += ch; h -= ch;
+    }
+    row = [];
+  };
+  for (const item of items) {
+    const c = { item, area: item.size * W * H / total };
+    if (row.length && worst([...row, c], Math.min(w, h)) > worst(row, Math.min(w, h))) flush();
+    row.push(c);
+  }
+  if (row.length) flush();
+  return out;
+}
+function drawTreemap() {
+  const el = $('#tm'), m = S.map;
+  if (!el || !m) return;
+  const W = el.clientWidth, H = el.clientHeight, mirror = rtl();
+  const items = m.items.filter(i => i.size > 0).slice(0, 90);
+  const rest = m.size - items.reduce((s, i) => s + i.size, 0);
+  if (rest > m.size * 0.002) items.push({ name: t('أشياء صغيرة ثانية'), size: rest, rest: true });
+  el.innerHTML = squarify(items, W, H).map(({ item: i, x, y, w, h }) => {
+    const cls = i.rest ? 'rest' : `${i.dir ? 'dir' : 'file'} ${i.denied ? 'denied' : ageClass(i.newest)}`;
+    const label = w > 70 && h > 34 ? `<b dir="auto">${esc(i.name)}</b><bdi class="num">${size(i.size)}</bdi>` : '';
+    const tip = `${i.name}\n${size(i.size)}${i.newest ? '\n' + t('آخر تعديل {0}', ago(i.newest)) : ''}${i.dir ? '\n' + t('اضغط عشان تدخله') : ''}`;
+    // the biggest block sits at the top of the reading start: right in Arabic, left in English
+    return `<div class="tile ${cls}" style="left:${mirror ? W - x - w : x}px;top:${y}px;width:${w}px;height:${h}px" title="${esc(tip)}"${i.dir ? ` data-act="dir" data-id="${i.id}"` : ''}>${label}</div>`;
+  }).join('');
+}
+
+// ----- cleanup -----
+PAGES.clean = {
+  render() {
+    if (!S.sug) return waitScan(t('التنظيف'), t('بعد الفحص نرتّب لك كل شي تقدر تحذفه، من الأكثر أمان للأقل.'));
+    const groups = ['safe', 'dev', 'games', 'review', 'system']
+      .map(k => [k, S.sug.groups.filter(g => g.group === k)]).filter(([, list]) => list.length);
+    return head(t('التنظيف'), t('رتّبنا كل شي حسب الأمان. التنظيف الآمن محدد لك جاهز، والباقي راجعه وحدد اللي تبيه. ما ينحذف شي إلا لما تضغط «نظّف المحدد» وتأكد.'))
+      + groups.map(([k, list]) => groupHtml(k, list)).join('')
+      + `<div class="clean-bar" id="cleanBar">${cleanBar()}</div>`;
+  },
+  after() { syncChecks(); },
+};
+function groupHtml(k, list) {
+  return `<section class="grp" id="grp-${k}" style="--c:var(--${k})">
+    <header class="grp-head"><div><h2>${t(GROUPS[k].name)}</h2><p>${t(GROUPS[k].desc)}</p></div>${k !== 'system' ? `<bdi class="num">${size(S.sug.totals[k])}</bdi>` : ''}</header>
+    ${list.map(sugHtml).join('')}
+  </section>`;
+}
+function sugHtml(s) {
+  const batch = s.items.some(i => BATCH.has(i.mode));
+  const admin = !S.init.admin && s.items.some(i => i.admin);
+  return `<article class="sug ${S.open.has(s.id) ? 'open' : ''}" id="sug-${s.id}">
+    <div class="sug-head">
+      ${batch ? `<input type="checkbox" class="chk" data-sug="${s.id}" aria-label="${esc(t('حدد {0}', s.title))}">` : '<span></span>'}
+      <button class="sug-title" data-act="toggleSug" data-id="${s.id}"><b>${esc(s.title)}</b><small>${s.items.length > 1 ? t('{0} عنصر', n(s.items.length)) : esc(leaf(s.items[0].path) || '')}</small></button>
+      ${admin ? `<span class="tag">${t('يحتاج مسؤول')}</span>` : '<span></span>'}
+      <bdi class="num">${s.size > 0 ? size(s.size) : ''}</bdi>
+    </div>
+    <p class="desc">${esc(s.desc)}</p>
+    <div class="items">${s.items.map(i => itemHtml({ ...i, group: s.group })).join('')}</div>
+    ${s.items.length > 3 ? `<button class="more" data-act="toggleSug" data-id="${s.id}">${t('اعرض الكل ({0})', n(s.items.length))}</button>` : ''}
+  </article>`;
+}
+function itemHtml(i) {
+  const real = !i.path.startsWith('::');
+  return `<div class="item">
+    ${BATCH.has(i.mode) ? `<input type="checkbox" class="chk" data-key="${esc(i.key)}" ${S.sel.has(i.key) ? 'checked' : ''} aria-label="${esc(t('حدد {0}', leaf(i.path)))}">` : '<span></span>'}
+    <div class="item-name"><b dir="auto">${esc(leaf(i.path) || '—')}</b>${real ? `<small>${esc(parentOf(i.path))}</small>` : ''}${i.note ? `<em>${esc(i.note)}</em>` : ''}${i.mode === 'folder' && i.group === 'games' && !i.note ? `<em>${t('ما لقينا له برنامج إلغاء تثبيت، فالحذف نهائي')}</em>` : ''}</div>
+    <span class="age">${ago(i.newest)}</span>
+    <bdi class="num">${i.size > 0 ? size(i.size) : ''}</bdi>
+    <div class="acts">${actionBtn(i)}${real ? `<button class="icon-btn" data-act="reveal" data-path="${esc(i.path)}" title="${t('افتحه في مستكشف الملفات')}" aria-label="${t('افتحه في مستكشف الملفات')}">${ICON.folder}</button>` : ''}</div>
+  </div>`;
+}
+function actionBtn(i) {
+  const k = esc(i.key);
+  if (i.mode === 'uninstall') return `<button class="btn sm" data-act="run" data-key="${k}">${t('إلغاء التثبيت')}</button>`;
+  if (i.mode === 'cmd') return `<button class="btn sm" data-act="run" data-key="${k}">${i.path.toLowerCase().endsWith('hiberfil.sys') ? t('قفّل السبات') : t('نظّفه بأداة ويندوز')}</button>`;
+  if (i.mode === 'tool') return `<button class="btn sm" data-act="run" data-key="${k}">${t('افتح الأداة')}</button>`;
+  return '';
+}
+const selected = () => allItems().filter(i => S.sel.has(i.key));
+function cleanBar() {
+  const items = selected(), gone = items.filter(i => i.mode !== 'recycle'), bin = items.filter(i => i.mode === 'recycle');
+  return `<div><b>${t('حددت {0} عنصر', bdi(n(items.length)))}</b> <bdi class="num big">${size(uniq(gone))}</bdi>
+      <small>${bin.length ? t('و{0} تروح لسلة المحذوفات', bdi(size(uniq(bin)))) : t('تنحذف وتتحرر مساحتها على طول')}</small></div>
+    <button class="btn primary" data-act="clean" ${items.length ? '' : 'disabled'}>${t('نظّف المحدد')}</button>`;
+}
+function syncChecks() {
+  for (const c of $$('input[data-sug]')) {
+    const s = S.sug.groups.find(g => g.id === c.dataset.sug);
+    const keys = s.items.filter(i => BATCH.has(i.mode)).map(i => i.key);
+    const k = keys.filter(x => S.sel.has(x)).length;
+    c.checked = k > 0 && k === keys.length;
+    c.indeterminate = k > 0 && k < keys.length;
+  }
+}
+function defaultSelection() {
+  // the safe group starts ticked, except emptying the bin (that one is final) and what needs admin we don't have
+  S.sel = new Set(S.sug.groups.filter(g => g.group === 'safe').flatMap(g => g.items)
+    .filter(i => BATCH.has(i.mode) && i.mode !== 'bin' && (!i.admin || S.init.admin)).map(i => i.key));
+}
+
+async function cleanKeys(keys) {
+  const set = new Set(keys);
+  const items = allItems().filter(i => set.has(i.key));
+  if (!items.length) return toast(t('ما حددت شي للتنظيف.'));
+  const gone = items.filter(i => i.mode !== 'recycle'), bin = items.filter(i => i.mode === 'recycle');
+  const rows = S.sug.groups.filter(g => g.items.some(i => set.has(i.key)))
+    .map(g => `<li><span>${esc(g.title)}</span><bdi class="num">${size(uniq(g.items.filter(i => set.has(i.key))))}</bdi></li>`).join('');
+  const ok = await confirmBox({
+    title: t('نظّف المحدد؟'),
+    body: `<ul class="sumlist">${rows}</ul>
+      ${gone.length ? `<p>${t('تنحذف نهائياً: {0}. كاش ومؤقتة ومخلفات ترجع تنبني لحالها', bdi(size(uniq(gone))))}${gone.some(i => i.group === 'games') ? t('، ومعها مجلدات ألعاب وبرامج حددتها') : ''}.</p>` : ''}
+      ${bin.length ? `<p>${t('تروح لسلة المحذوفات: {0}. تقدر ترجعها، والمساحة تتحرر لما تفضّي السلة.', bdi(size(uniq(bin))))}</p>` : ''}
+      <p>${t('سكّر البرامج اللي تستخدمها (المتصفح وDiscord وSteam) عشان ينحذف كل شي.')}</p>`,
+    ok: t('نظّف'), danger: true,
+  });
+  if (!ok) return;
+  await api('clean', { keys });
+  const m = modal(`<h2>${t('ننظف…')}</h2><div class="bar"><i id="cbar" style="width:0"></i></div><p class="path" id="cpath"></p><p id="cfreed"></p>`);
+  let st;
+  do {
+    await sleep(500);
+    st = await api('cleanStatus');
+    $('#cbar', m.el).style.width = pct(st.done, st.total) + '%';
+    $('#cpath', m.el).textContent = st.current;
+    $('#cfreed', m.el).innerHTML = t('تنظّف {0} من {1}، وتحرر {2}', bdi(n(st.done)), bdi(n(st.total)), bdi(size(st.freed)));
+  } while (st.running);
+  m.close();
+  await reloadAfterChange();
+  showResult(st);
+}
+function showResult(st) {
+  const m = modal(`<h2>${t('تمّ التنظيف')}</h2>
+    <p class="result">${t('{0} تحررت', bdi(size(st.freed)))}</p>
+    ${st.recycled ? `<p>${t('{0} في سلة المحذوفات. فضّ السلة عشان تتحرر مساحتها.', bdi(size(st.recycled)))}</p>` : ''}
+    ${st.failed.length ? `<details><summary>${t('{0} عنصر ما انحذف كامل', bdi(n(st.failed.length)))}</summary><ul class="fail">${st.failed.map(f => `<li dir="ltr">${esc(f)}</li>`).join('')}</ul></details>
+      <p>${st.needAdmin ? t('غالباً ملفات مفتوحة في برنامج شغال، أو تحتاج صلاحية مسؤول.') : t('غالباً ملفات مفتوحة في برنامج شغال.')}</p>` : ''}
+    <div class="acts">${st.recycled ? `<button class="btn primary" data-r="bin">${t('فضّ السلة')}</button>` : ''}${st.needAdmin && !S.init.admin ? `<button class="btn" data-r="admin">${t('شغّل كمسؤول')}</button>` : ''}<button class="btn ghost" data-r="ok">${t('تمام')}</button></div>`);
+  m.el.addEventListener('click', async e => {
+    const r = e.target.closest('[data-r]')?.dataset.r;
+    if (!r) return;
+    m.close();
+    if (r === 'bin') await emptyBin();
+    if (r === 'admin') await ACT.admin();
+  });
+}
+async function emptyBin() {
+  if (!await confirmBox({ title: t('نفضّي سلة المحذوفات؟'), body: `<p>${t('كل اللي في السلة ينحذف نهائياً، حتى الأشياء اللي حذفتها قبل. ما تقدر ترجعها بعدها.')}</p>`, ok: t('فضّ السلة'), danger: true })) return;
+  await api('emptyBin');
+  toast(t('فضّينا السلة.'));
+  await reloadAfterChange();
+}
+async function reloadAfterChange() {
+  S.init.drives = (await api('init')).drives;
+  if (S.scan?.phase === 'done') { S.sug = await api('suggestions'); if (S.sug) defaultSelection(); }
+  S.files = null; S.types = null;
+  side();
+  if (['home', 'clean'].includes(S.page)) draw();
+}
+
+async function runItem(key) {
+  const i = allItems().find(x => x.key === key);
+  if (!i) return;
+  if (i.mode === 'uninstall' && !await confirmBox({ title: t('نلغي تثبيت {0}؟', esc(i.note || leaf(i.path))), body: `<p>${t('بنفتح برنامج إلغاء التثبيت الخاص فيه، وكمّل الخطوات منه.')}</p>`, ok: t('افتح إلغاء التثبيت') })) return;
+  if (i.mode === 'cmd') {
+    const hib = i.path.toLowerCase().endsWith('hiberfil.sys');
+    const ok = await confirmBox({
+      title: hib ? t('نقفّل السبات؟') : t('ننظف مكونات ويندوز؟'),
+      body: hib ? `<p>${t('يتحرر {0}، بس يوقف السبات (Hibernate) والإقلاع السريع. ترجّعه متى ما بغيت بأمر {1}.', bdi(size(i.size)), '<code dir="ltr">powercfg /h on</code>')}</p><p>${t('ويندوز بيطلب منك موافقة المسؤول.')}</p>`
+        : `<p>${t('بنشغّل أداة DISM الرسمية من ويندوز في نافذة لحالها. تاخذ كم دقيقة، وويندوز بيطلب موافقة المسؤول.')}</p>`,
+      ok: t('كمّل'),
+    });
+    if (!ok) return;
+  }
+  await api('run', { key });
+  toast(i.mode === 'uninstall' ? t('فتحنا برنامج إلغاء التثبيت.') : i.mode === 'cmd' ? t('شغّلنا الأمر في نافذة جديدة.') : t('فتحنا الأداة.'));
+}
+
+async function goGroup(k, key) {
+  await go('clean');
+  let target = $('#grp-' + k);
+  const s = key && S.sug?.groups.find(g => g.items.some(i => i.key === key));
+  if (s) { S.open.add(s.id); $('#sug-' + s.id)?.classList.add('open'); target = $('#sug-' + s.id) || target; }
+  target?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+}
+
+// ----- largest files -----
+PAGES.files = {
+  async load() {
+    if (S.scan?.phase === 'done' && !S.files) [S.files, S.types] = await Promise.all([api('bigFiles'), api('types')]);
+  },
+  render() {
+    if (S.scan?.phase !== 'done') return waitScan(t('أكبر الملفات'), t('بعد الفحص نوريك أكبر الملفات في القرص وأنواعها.'));
+    const top = head(t('أكبر الملفات'), t('وش أنواع الملفات اللي ماكلة القرص، وأكبر الملفات فيه. اضغط على أي نوع عشان تشوف ملفاته بس.'));
+    if (!S.files) return top + `<p class="muted">${t('نجمع الملفات…')}</p>`;
+    const max = S.types[0]?.size || 1;
+    const types = S.types.filter(x => x.size > 0).map(x => `<button class="type ${S.kind === x.kind ? 'on' : ''}" data-act="kind" data-kind="${x.kind}" title="${esc(x.exts.map(e => (e.ext ? '.' + e.ext : t('بدون امتداد')) + '  ' + size(e.size)).join('\n'))}">
+        <span>${t(KINDS[x.kind] || x.kind)}</span><span class="tb"><i style="width:${pct(x.size, max)}%"></i></span><bdi class="num">${size(x.size)}</bdi><span class="muted">${t('{0} ملف', bdi(n(x.count)))}</span></button>`).join('');
+    const list = S.files.filter(f => S.kind === 'all' || f.kind === S.kind).slice(0, 300);
+    return top + `<div class="types">${types}</div>
+      <div class="filter-row"><h2 class="sub">${S.kind === 'all' ? t('أكبر الملفات') : t('أكبر ملفات: {0}', t(KINDS[S.kind]))}</h2>${S.kind !== 'all' ? `<button class="btn sm ghost" data-act="kind" data-kind="all">${t('اعرض كل الأنواع')}</button>` : ''}</div>
+      ${list.length ? `<table class="list"><thead><tr><th>${t('الملف')}</th><th>${t('النوع')}</th><th>${t('الحجم')}</th><th>${t('آخر تعديل')}</th><th></th></tr></thead><tbody>${list.map(fileRow).join('')}</tbody></table>`
+        : `<p class="muted">${t('ما فيه ملفات من هذا النوع أكبر من 10 MB.')}</p>`}`;
+  },
+};
+const fileRow = f => `<tr>
+  <td class="grow"><div class="nm" dir="auto"><b>${esc(f.name)}</b></div><small class="path">${esc(parentOf(f.path))}</small></td>
+  <td class="age">${t(KINDS[f.kind] || '')}</td>
+  <td><bdi class="num">${size(f.size)}</bdi></td>
+  <td class="age">${ago(f.modified)}</td>
+  <td class="acts"><button class="icon-btn" data-act="reveal" data-path="${esc(f.path)}" title="${t('افتحه في مستكشف الملفات')}" aria-label="${t('افتحه في مستكشف الملفات')}">${ICON.folder}</button><button class="icon-btn danger" data-act="recycle" data-path="${esc(f.path)}" data-size="${f.size}" title="${t('انقله لسلة المحذوفات')}" aria-label="${t('انقله لسلة المحذوفات')}">${ICON.trash}</button></td>
+</tr>`;
+
+// ----- duplicates -----
+PAGES.dupes = {
+  async load() {
+    if (S.scan?.phase === 'done') S.dupes = await api('dupesStatus');
+    if (S.dupes?.running) pageTimer = setInterval(pollDupes, 800);
+  },
+  render() {
+    if (S.scan?.phase !== 'done') return waitScan(t('الملفات المكررة'), t('بعد الفحص ندوّر لك على الملفات الكبيرة اللي لها نسخ.'));
+    const top = head(t('الملفات المكررة'), t('ملفات كبيرة (أكبر من 10 MB) لها نسخ ثانية بنفس المحتوى بالضبط، حتى لو أسماءها مختلفة. خلّ نسخة وحدة وانقل الباقي للسلة.'));
+    const d = S.dupes;
+    if (!d || (!d.running && !d.groups.length && !S.dupesAsked))
+      return top + `<button class="btn primary" data-act="dupes">${t('دوّر على المكرر')}</button><p class="note" style="margin-top:12px">${t('نقارن المحتوى نفسه، مو الأسماء، فممكن ياخذ كم دقيقة.')}</p>`;
+    if (d.running)
+      return top + (d.phase === 'full'
+        ? `<section class="panel"><h2>${t('نقارن محتوى الملفات المشتبه فيها…')}</h2><div class="bar"><i style="width:${pct(d.done, d.total)}%"></i></div>
+          <p class="muted" style="margin-top:8px">${t('{0} من {1}', bdi(size(d.done)), bdi(size(d.total)))}</p></section>`
+        : `<section class="panel"><h2>${t('نفرز الملفات المتشابهة في الحجم…')}</h2><p class="muted">${t('هذي خطوة سريعة، بعدها نقارن المحتوى.')}</p></section>`);
+    if (!d.groups.length) return top + `<p class="lead">${t('ما لقينا ملفات كبيرة مكررة.')}</p>`;
+    const wasted = d.groups.reduce((s, g) => s + g.wasted, 0);
+    return top + `<p class="lead">${t('لقينا {0} ملف له نسخ، وتقدر توفر {1}.', bdi(n(d.groups.length)), bdi(size(wasted)))}</p>`
+      + d.groups.map((g, gi) => `<section class="dup">
+        <header><b>${t('{0} نسخ، كل وحدة {1}', bdi(n(g.files.length)), bdi(size(g.size)))}</b><span>${t('توفر {0}', bdi(size(g.wasted)))}</span></header>
+        ${g.files.map((f, fi) => `<div class="dup-file"><span class="path">${esc(f.path)}</span><span class="age">${ago(f.modified)}</span>
+          <button class="icon-btn" data-act="reveal" data-path="${esc(f.path)}" title="${t('افتحه في مستكشف الملفات')}" aria-label="${t('افتحه في مستكشف الملفات')}">${ICON.folder}</button>
+          ${g.files.length > 1 ? `<button class="icon-btn danger" data-act="dupDel" data-g="${gi}" data-f="${fi}" title="${t('انقل هذي النسخة للسلة')}" aria-label="${t('انقل هذي النسخة للسلة')}">${ICON.trash}</button>` : '<span></span>'}</div>`).join('')}
+      </section>`).join('');
+  },
+};
+async function pollDupes() {
+  S.dupes = await api('dupesStatus');
+  if (!S.dupes.running) clearInterval(pageTimer);
+  if (S.page === 'dupes') draw();
+}
+
+// ----- installed programs -----
+PAGES.apps = {
+  async load() { S.apps = await api('apps'); },
+  render() {
+    const top = head(t('البرامج المثبتة'), t('كل البرامج المثبتة مرتبة من الأكبر. بعد الفحص نحسب حجمها الحقيقي من مجلدها، وقبله نعرض تقدير ويندوز.'));
+    if (!S.apps) return top + `<p class="muted">${t('نجمع البرامج…')}</p>`;
+    return top + `<input class="search" id="appSearch" type="search" placeholder="${t('دوّر على برنامج…')}" value="${esc(S.query)}" aria-label="${t('دوّر على برنامج…')}"><table class="list" id="appsTable">${appsRows()}</table>`;
+  },
+  after() {
+    $('#appSearch')?.addEventListener('input', e => { S.query = e.target.value; $('#appsTable').innerHTML = appsRows(); });
+  },
+};
+function appsRows() {
+  const q = S.query.trim().toLowerCase();
+  const list = S.apps.filter(a => !q || `${a.name} ${a.publisher || ''}`.toLowerCase().includes(q));
+  return `<thead><tr><th>${t('البرنامج')}</th><th>${t('الحجم')}</th><th>${t('تاريخ التثبيت')}</th><th></th></tr></thead><tbody>${list.map(a => `<tr>
+    <td class="grow"><div class="nm" dir="auto"><b>${esc(a.name)}</b></div><small class="muted nm" dir="auto">${esc([a.publisher, a.version].filter(Boolean).join(' '))}</small></td>
+    <td><bdi class="num">${a.size ? size(a.size) : '—'}</bdi>${a.size && !a.measured ? `<small class="muted">${t('تقدير ويندوز')}</small>` : ''}</td>
+    <td class="age">${fmtDate(a.date)}</td>
+    <td class="acts"><button class="btn sm" data-act="uninstall" data-key="${esc(a.key)}" data-name="${esc(a.name)}">${t('إلغاء التثبيت')}</button></td>
+  </tr>`).join('')}</tbody>`;
+}
+
+// ----- RAM: optimizer on top, monitor below -----
+PAGES.ram = {
+  async load() {
+    [S.ram, S.opt] = await Promise.all([api('ram'), api('optState')]);
+    pageTimer = setInterval(async () => { S.ram = await api('ram'); PAGES.ram.live(); }, 4000);
+  },
+  render() {
+    const top = head(t('الرام والأداء'), t('حسّن الرام بضغطة، أو خلّه يتحسّن لحاله. وتحت، نراقب الرام كل ثانيتين ونسجّل أي قفزة مفاجئة ومين سببها.'));
+    if (!S.live || !S.ram || !S.opt) return top + `<p class="muted">${t('نجمع القراءات…')}</p>`;
+    return top + `
+      <section class="opt" id="opt">${optHtml()}</section>
+      <div class="opt-set" id="optSet">${optSettingsHtml()}</div>
+      <section class="ram-top" id="ramTop">${ramTop()}</section>
+      <section class="panel"><div class="panel-head"><h2>${t('الرام في آخر 30 دقيقة')}</h2><span class="muted">${t('النقاط الحمراء قفزات')}</span></div><canvas class="chart" id="ramChart"></canvas></section>
+      <div class="two">
+        <section class="panel"><h2>${t('سجل القفزات')}</h2><div id="spikes">${spikesHtml()}</div></section>
+        <section class="panel"><h2>${t('وش نقترح')}</h2><div id="tips">${tipsHtml()}</div></section>
+      </div>
+      <section class="panel"><h2>${t('مين ماكل الرام الحين')}</h2><table class="list" id="procs">${procsHtml()}</table></section>`;
+  },
+  after() { drawRamChart(); },
+  live() {
+    if (!$('#ramTop')) return draw();
+    gaugeUpdate();
+    $('#ramTop').innerHTML = ramTop();
+    $('#spikes').innerHTML = spikesHtml();
+    $('#tips').innerHTML = tipsHtml();
+    $('#procs').innerHTML = procsHtml();
+    drawRamChart();
+  },
+};
+const GAUGE_R = 76, GAUGE_C = 2 * Math.PI * GAUGE_R;
+const gaugeColor = p => (p >= 85 ? 'var(--danger)' : p >= 70 ? 'var(--games)' : 'var(--safe)');
+function optStats() {
+  const m = S.live.mem;
+  return t('مستخدمة {0}', bdi(size(m.used))) + `<span>${t('متاحة {0}', bdi(size(m.total - m.used)))}</span><span>${t('الكل {0}', bdi(size(m.total)))}</span>`;
+}
+function optHtml() {
+  const m = S.live.mem, p = pct(m.used, m.total), last = S.opt.history[0];
+  return `
+    <div class="gauge" id="gauge" style="--c:${gaugeColor(p)}"><svg viewBox="0 0 176 176" aria-hidden="true"><circle class="track" cx="88" cy="88" r="${GAUGE_R}"/><circle class="fill" id="gFill" cx="88" cy="88" r="${GAUGE_R}" stroke-dasharray="${GAUGE_C * p / 100} ${GAUGE_C}"/></svg>
+      <div class="mid"><bdi class="num" id="gPct">${p.toFixed(0)}%</bdi><small>${t('من الرام مستخدمة')}</small></div></div>
+    <div class="opt-info">
+      <h2>${t('مُحسّن الرام')}</h2>
+      <p>${t('يفرّغ الرام اللي تحجزها البرامج وهي ما تستخدمها، فتصير عندك رام متاحة أكثر للعبة أو البرنامج الثقيل. البرامج ترجع تاخذ اللي تحتاجه بس.')}</p>
+      <div class="opt-stats" id="optStats">${optStats()}</div>
+      <button class="btn primary big" data-act="optimize" id="optBtn">${t('حسّن الرام الحين')}</button><span class="opt-result" id="optRes"></span>
+      ${last ? `<div class="opt-hist">${t('آخر تحسين: {0}، حرّر {1}', timeLabel(last.time), bdi(size(last.freed)))}${last.auto ? ' ' + t('(تلقائي)') : ''}</div>` : ''}
+    </div>`;
+}
+function gaugeUpdate() {
+  const m = S.live?.mem, g = $('#gauge');
+  if (!m || !g) return;
+  const p = pct(m.used, m.total);
+  g.style.setProperty('--c', gaugeColor(p));
+  $('#gFill').setAttribute('stroke-dasharray', `${GAUGE_C * p / 100} ${GAUGE_C}`);
+  $('#gPct').textContent = p.toFixed(0) + '%';
+  $('#optStats').innerHTML = optStats();
+}
+function optSettingsHtml() {
+  const s = S.opt.settings;
+  const ck = (key, label, extra = '', disabled = false) =>
+    `<label class="check ${disabled ? 'off' : ''}"><input type="checkbox" class="chk" data-set="${key}" ${(key === 'startup' ? S.opt.startup : s[key]) ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span>${label}${extra}</span></label>`;
+  const sel = (key, values, fmt) => `<select data-set="${key}" aria-label="${key}">${values.map(v => `<option value="${v}" ${s[key] === v ? 'selected' : ''}>${fmt(v)}</option>`).join('')}</select>`;
+  return `
+    <section class="panel"><h3>${t('التحسين التلقائي')}</h3>
+      ${ck('autoLow', t('لما يوصل استخدام الرام {0}', sel('lowPercent', [70, 75, 80, 85, 90, 95], v => v + '%')))}
+      ${ck('autoEvery', t('كل {0}', sel('everyMinutes', [3, 5, 10, 30, 60], v => t('{0} دقيقة', v))))}
+      ${ck('idleOnly', t('بس لما يكون المعالج فاضي (مستحسن)'))}
+      ${ck('notify', t('نبّهني بعد كل تحسين تلقائي'))}
+    </section>
+    <section class="panel"><h3>${t('طرق التحسين')}</h3>
+      ${ck('trim', t('تفريغ الرام من البرامج'))}
+      ${ck('standby', t('تفريغ كاش ويندوز (Standby)'), S.opt.admin ? '' : ` <span class="tag">${t('يحتاج مسؤول')}</span>`, !S.opt.admin)}
+      ${ck('clipboard', t('مسح الحافظة (اللي نسخته)'))}
+    </section>
+    <section class="panel"><h3>${t('التشغيل')}</h3>
+      ${ck('closeToTray', t('لما أقفل النافذة، يبقى شغّال جنب الساعة'))}
+      ${ck('startup', t('يشتغل مع ويندوز جنب الساعة'))}
+    </section>`;
+}
+function ramTop() {
+  const m = S.live.mem;
+  const parts = [
+    ['البرامج وويندوز', m.used - m.modified - m.compressed, 'var(--dev)', 'الرام اللي تستخدمها البرامج والنظام الحين'],
+    ['مضغوطة', m.compressed, 'var(--review)', 'ويندوز يضغط الأشياء القليلة الاستخدام بدل ما يكتبها على القرص'],
+    ['تنتظر الحفظ', m.modified, 'var(--games)', 'بيانات لازم تنكتب على القرص قبل لا تتحرر'],
+    ['كاش', m.standby, 'var(--system)', 'ملفات فتحتها قبل وويندوز محتفظ فيها عشان تفتح أسرع. تتحرر لحالها أول ما يحتاجها برنامج، فهي مو مشكلة'],
+    ['فاضية', m.free, 'var(--sand)', 'ما أحد يستخدمها'],
+  ].map(([l, v, c, h]) => [t(l), v, c, t(h)]);
+  return `<div class="ram-big"><bdi class="num big">${(m.used / GB).toFixed(1)}</bdi><span class="unit">GB</span>
+      <small>${t('مستخدمة من {0}، يعني {1}', bdi(size(m.total)), bdi(pct(m.used, m.total).toFixed(0) + '%'))}</small></div>
+    <div>
+      <div class="membar">${parts.map(([l, v, c, h]) => `<span style="flex-grow:${Math.max(v, 0)};background:${c}" title="${esc(`${l}: ${size(v)}\n${h}`)}"></span>`).join('')}</div>
+      <div class="memlegend">${parts.map(([l, v, c, h]) => `<span title="${esc(h)}"><i style="background:${c}"></i>${l} <bdi class="num">${size(v)}</bdi></span>`).join('')}</div>
+      <div class="memlegend">
+        <span title="${t('ذاكرة النواة والتعريفات. لو الـ Non-paged كبير ويزيد مع الوقت، غالباً تعريف فيه تسريب')}">${t('ذاكرة التعريفات')} <bdi class="num">${size(m.paged + m.nonpaged)}</bdi></span>
+        <span title="${t('كل اللي حجزته البرامج، ويشمل اللي في pagefile.sys على القرص')}">${t('الذاكرة المحجوزة {0} من {1}', bdi(size(m.commit)), bdi(size(m.commitLimit)))}</span>
+      </div>
+    </div>`;
+}
+function spikesHtml() {
+  const list = S.ram?.spikes || [];
+  if (!list.length) return `<p class="muted">${t('ما صار ولا قفزة للحين. نسجّل أي زيادة 1 GB أو أكثر خلال دقيقة، ونحفظ السجل حتى لو قفلت البرنامج.')}</p>`;
+  return list.map(s => `<div class="spike"><div><b>${timeLabel(s.time)}</b> <span class="muted">${t('قفزت من {0} إلى {1}', bdi(size(s.from)), bdi(size(s.to)))}</span></div>
+    <div>${s.culprits.length ? s.culprits.map(c => `<span class="chip"><span dir="auto">${esc(c.name)}</span><bdi class="num">+${size(c.delta)}</bdi></span>`).join('')
+      : `<span class="muted">${t('ما زاد برنامج معيّن؛ الزيادة من ويندوز نفسه أو التعريفات ({0}).', bdi(size(s.kernel)))}</span>`}</div></div>`).join('');
+}
+function tipsHtml() {
+  const L = S.live, R = S.ram;
+  if (!L || !R) return '';
+  const m = L.mem, tips = [];
+  const by = (...names) => R.procs.filter(p => names.includes(p.name.toLowerCase())).reduce((s, p) => s + p.ram, 0);
+  const vm = by('vmmem', 'vmmemwsl');
+  if (vm > 1.5 * GB) tips.push(t('<b>WSL أو Docker حاجزة {0}.</b> الآلة الافتراضية تاخذ رام وما ترجعها بسرعة. حط لها حد في ملف {1}:', bdi(size(vm)), '<code dir="ltr">%UserProfile%\\.wslconfig</code>')
+    + `<pre dir="ltr">[wsl2]\nmemory=4GB\n\n[experimental]\nautoMemoryReclaim=gradual</pre>` + t('وبعدها شغّل {0}.', '<code dir="ltr">wsl --shutdown</code>'));
+  const br = by('chrome', 'msedge', 'firefox', 'brave', 'opera');
+  if (br > 3 * GB) tips.push(t('<b>المتصفحات ماكلة {0}.</b> كل تبويب وإضافة ياخذ رام. سكّر اللي ما تحتاجه، أو فعّل «توفير الذاكرة» من إعدادات المتصفح.', bdi(size(br))));
+  const wv = by('msedgewebview2');
+  if (wv > 1.5 * GB) tips.push(t('<b>WebView2 ماكل {0}.</b> محرك ويب تستخدمه برامج مثل Teams وClaude والويدجتس. سكّر البرامج اللي ما تحتاجها.', bdi(size(wv))));
+  const java = by('java', 'javaw');
+  if (java > GB) tips.push(t('<b>Java ماكل {0}.</b> غالباً Gradle daemon باقي شغّال بعد البناء. وقّفه بأمر {1}.', bdi(size(java)), '<code dir="ltr">gradlew --stop</code>'));
+  const node = by('node');
+  if (node > 1.5 * GB) tips.push(t('<b>Node.js ماكل {0}.</b> شيّك على سيرفرات التطوير اللي نسيتها شغّالة.', bdi(size(node))));
+  if (m.nonpaged > GB) tips.push(t('<b>ذاكرة التعريفات عالية ({0}).</b> لو تزيد مع الوقت بدون سبب، غالباً تعريف فيه تسريب (الشبكة أو كرت الشاشة أو برنامج حماية). حدّث التعريفات.', bdi(size(m.nonpaged))));
+  if (m.commit > m.commitLimit * 0.85) tips.push(t('<b>الذاكرة المحجوزة قريبة من الحد.</b> ويندوز بيكبّر pagefile.sys وياكل من مساحة القرص. سكّر برامج أو زِد الرام.'));
+  else if (m.used > m.total * 0.85) tips.push(t('<b>الرام شبه مليانة ({0}).</b> لما تمتلئ، ويندوز يستخدم القرص بدالها، فيثقل الجهاز ويكبر pagefile.sys.', bdi(pct(m.used, m.total).toFixed(0) + '%')));
+  const g = R.growers?.[0];
+  if (g && g.delta > 500 * 2 ** 20) tips.push(t('<b>{0} زاد استهلاكه {1} خلال آخر {2} دقيقة.</b> لو يزيد ولا ينقص، يمكن فيه تسريب ذاكرة؛ أعد تشغيله.', `<span dir="auto">${esc(g.name)}</span>`, bdi(size(g.delta)), bdi(n(R.growMinutes))));
+  if (!tips.length) tips.push(t('كل شي طبيعي الحين. لو حسيت الجهاز ثقل فجأة، ارجع هنا وشوف سجل القفزات.'));
+  return tips.map(x => `<div class="tip">${x}</div>`).join('');
+}
+function procsHtml() {
+  const list = (S.ram?.procs || []).slice(0, 40), max = list[0]?.ram || 1;
+  return `<thead><tr><th>${t('البرنامج')}</th><th>${t('الرام')}</th><th>${t('المعالج')}</th><th></th></tr></thead><tbody>${list.map(p => {
+    const key = p.name.toLowerCase();
+    return `<tr>
+      <td class="grow"><div class="nm"><b dir="auto">${esc(p.name)}</b>${p.count > 1 ? ` <bdi class="num muted">×${p.count}</bdi>` : ''}</div>${PROC[key] ? `<small class="muted nm">${t(PROC[key])}</small>` : ''}</td>
+      <td><span class="pbar"><i style="width:${pct(p.ram, max)}%"></i></span><bdi class="num">${size(p.ram)}</bdi></td>
+      <td><bdi class="num">${p.cpu.toFixed(1)}%</bdi></td>
+      <td class="acts">${UNTOUCHABLE.has(key) ? '' : `<button class="btn sm ghost" data-act="kill" data-name="${esc(p.name)}" data-count="${p.count}">${t('قفّله')}</button>`}</td>
+    </tr>`;
+  }).join('')}</tbody>`;
+}
+function setupCanvas(c) {
+  const r = devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
+  c.width = w * r;
+  c.height = h * r;
+  const ctx = c.getContext('2d');
+  ctx.setTransform(r, 0, 0, r, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  ctx.direction = 'ltr';
+  return [ctx, w, h];
+}
+function drawRamChart() {
+  const c = $('#ramChart'), hist = S.ram?.history;
+  if (!c || !hist || hist.length < 2) return;
+  const [ctx, W, H] = setupCanvas(c);
+  const total = S.live.mem.total, pad = { t: 8, b: 24, l: 6, r: 50 };
+  const t1 = hist[hist.length - 1][0], t0 = t1 - 30 * 60e3;
+  const X = x => pad.l + (x - t0) / (t1 - t0) * (W - pad.l - pad.r);
+  const Y = v => pad.t + (1 - v / total) * (H - pad.t - pad.b);
+  ctx.font = '11px Bahnschrift, Segoe UI';
+  ctx.lineWidth = 1;
+  for (const f of [0, 0.25, 0.5, 0.75, 1]) {
+    const y = Math.round(Y(total * f)) + 0.5;
+    ctx.strokeStyle = css('--line');
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    ctx.fillStyle = css('--faint');
+    ctx.fillText(`${(total * f / GB).toFixed(0)} GB`, W - pad.r + 8, y + 4);
+  }
+  const pts = hist.filter(p => p[0] >= t0);
+  ctx.beginPath();
+  ctx.moveTo(X(pts[0][0]), Y(0));
+  pts.forEach(p => ctx.lineTo(X(p[0]), Y(p[1])));
+  ctx.lineTo(X(pts[pts.length - 1][0]), Y(0));
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(114, 169, 243, .16)';
+  ctx.fill();
+  ctx.beginPath();
+  pts.forEach((p, i) => (i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))));
+  ctx.strokeStyle = css('--dev');
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = css('--danger');
+  for (const s of S.ram.spikes) {
+    const at = Date.parse(s.time);
+    if (at >= t0) { ctx.beginPath(); ctx.arc(X(at), Y(s.to), 4.5, 0, 7); ctx.fill(); }
+  }
+  ctx.fillStyle = css('--faint');
+  ctx.textAlign = 'center';
+  ['قبل 30 دقيقة', 'قبل 20 دقيقة', 'قبل 10 دقايق', 'الحين'].forEach((l, i) => ctx.fillText(t(l), Math.min(Math.max(X(t0 + i * 10 * 60e3), 40), W - pad.r - 24), H - 6));
+}
+
+// ----- system info -----
+PAGES.sys = {
+  async load() { S.sys = S.sys || await api('sys'); },
+  render() {
+    return head(t('معلومات الجهاز'), t('كل تفاصيل جهازك، مع شرح بسيط جنب أي شي غامض (حط الماوس على ⓘ). الأرقام اللي فوق تتحدث كل ثانيتين.'))
+      + `<div class="tiles" id="tiles">${tilesHtml()}</div>`
+      + (S.sys ? `<div class="sections">${S.sys.map(sectHtml).join('')}</div>` : `<p class="muted">${t('نجمع معلومات الجهاز…')}</p>`);
+  },
+  after() { drawSparks(); },
+  live() {
+    const el = $('#tiles');
+    if (!el) return;
+    el.innerHTML = tilesHtml();
+    drawSparks();
+  },
+};
+function tilesHtml() {
+  const L = S.live;
+  if (!L) return '';
+  const m = L.mem;
+  const gpuLines = [
+    L.gpuTemp != null ? t('الحرارة {0}', bdi(L.gpuTemp + '°C')) : '',
+    L.vram ? (L.vramTotal ? t('الذاكرة {0} من {1}', bdi(size(L.vram)), bdi(size(L.vramTotal))) : t('الذاكرة {0}', bdi(size(L.vram)))) : '',
+    L.gpuFan != null ? t('المروحة {0}', bdi(L.gpuFan + '%')) : '',
+  ].filter(Boolean).map(x => `<small>${x}</small>`).join('');
+  return `
+    <div class="tilebox"><h3>${t('المعالج')}</h3><bdi class="num v">${L.cpu.toFixed(0)}%</bdi><small>${t('السرعة {0}', bdi((L.mhz / 1000).toFixed(2) + ' GHz'))}</small>
+      <div class="cores" title="${t('كل عمود نواة')}">${L.cores.map(v => `<i style="height:${Math.max(4, v)}%"></i>`).join('')}</div></div>
+    <div class="tilebox"><h3>${t('كرت الشاشة')}</h3><bdi class="num v">${L.gpu.toFixed(0)}%</bdi>${gpuLines}<canvas data-spark="gpu"></canvas></div>
+    <div class="tilebox"><h3>${t('الرام')}</h3><bdi class="num v">${pct(m.used, m.total).toFixed(0)}%</bdi><small>${t('{0} من {1}', bdi(size(m.used)), bdi(size(m.total)))}</small><small>${t('العمليات {0}', bdi(n(L.procs)))}</small></div>
+    <div class="tilebox"><h3>${t('القرص')}</h3><bdi class="num v">${L.diskActive.toFixed(0)}%</bdi><small>${t('قراءة {0}', bdi(rate(L.diskRead)))}</small><small>${t('كتابة {0}', bdi(rate(L.diskWrite)))}</small><canvas data-spark="disk"></canvas></div>
+    <div class="tilebox"><h3>${t('الشبكة')}</h3><bdi class="num v">${rate(L.netDown)}</bdi><small>${t('تنزيل، والرفع {0}', bdi(rate(L.netUp)))}</small><small>${t('شغّال من {0} يوم', bdi(Math.floor(L.uptime / 86400)))}</small><canvas data-spark="net"></canvas></div>`;
+}
+function drawSparks() {
+  for (const c of $$('canvas[data-spark]')) {
+    const key = c.dataset.spark, v = S.spark[key];
+    if (v.length < 2) continue;
+    const [ctx, W, H] = setupCanvas(c);
+    const max = key === 'net' ? Math.max(...v, 1) : 100;
+    ctx.beginPath();
+    v.forEach((x, i) => { const px = i / (v.length - 1) * W, py = H - 2 - x / max * (H - 4); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+    ctx.strokeStyle = css('--sand');
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+}
+const sectHtml = s => `<section class="sect"><h2><span aria-hidden="true">${s.icon}</span>${esc(s.title)}</h2>
+  ${s.cards.map(c => `<div class="card"><h3 dir="auto">${esc(c.name)}</h3><dl class="kv">${c.rows.map(r =>
+    `<dt>${esc(r.label)}${r.hint ? `<span class="hint" title="${esc(r.hint)}">ⓘ</span>` : ''}</dt><dd dir="auto">${esc(r.value)}</dd>`).join('')}</dl></div>`).join('')}
+  ${s.id === 'startup' ? `<button class="btn sm" data-act="open" data-what="ms-settings:startupapps">${t('إدارة برامج بدء التشغيل')}</button>` : ''}
+</section>`;
+
+// ---------- sidebar ----------
+function side() {
+  const d = sysDrive(), L = S.live, foot = $('#foot'), shape = [!!d, !!L, !!S.init?.admin, LANG].join();
+  // rebuilt only when what it shows changes; the 2 s ticks just move numbers, so clicks, focus and an open language list survive
+  if (foot.dataset.shape !== shape) {
+    foot.dataset.shape = shape;
+    foot.innerHTML = `
+    ${d ? `<div><div class="mini-row"><span>${t('القرص {0}', esc(d.name.slice(0, 2)))}</span><span data-v="disk"></span></div><div class="bar"><i data-b="disk"></i></div></div>` : ''}
+    ${L ? `<div><div class="mini-row"><span>${t('الرام')} <button class="mini-act" data-act="quickOpt" title="${t('حسّن الرام الحين')}">${t('حسّن')}</button></span><bdi class="num" data-v="ram"></bdi></div><div class="bar"><i data-b="ram"></i></div></div>
+      <div><div class="mini-row"><span>${t('المعالج')}</span><bdi class="num" data-v="cpu"></bdi></div><div class="bar"><i data-b="cpu"></i></div></div>` : ''}
+    ${S.init?.admin ? `<div class="admin-on">${ICON.shield}<span>${t('شغّال كمسؤول')}</span></div>` : `<button class="btn ghost sm" data-act="admin">${ICON.shield}${t('شغّل كمسؤول')}</button>`}
+    ${LANGS.length > 1 ? `<select class="lang-sel" data-lang aria-label="Language">${LANGS.map(l => `<option value="${l.code}" ${l.code === LANG ? 'selected' : ''}>${esc(l.name)}</option>`).join('')}</select>` : ''}`;
+  }
+  const fill = (k, html, w) => { foot.querySelector(`[data-v=${k}]`).innerHTML = html; foot.querySelector(`[data-b=${k}]`).style.width = w + '%'; };
+  if (d) {
+    fill('disk', t('{0} فاضي', bdi(size(d.free))), pct(d.total - d.free, d.total));
+    foot.querySelector('[data-b=disk]').style.background = d.free < d.total * 0.1 ? 'var(--danger)' : 'var(--sand)';
+  }
+  if (L) {
+    fill('ram', pct(L.mem.used, L.mem.total).toFixed(0) + '%', pct(L.mem.used, L.mem.total));
+    fill('cpu', L.cpu.toFixed(0) + '%', L.cpu);
+  }
+}
+
+// ---------- dialogs ----------
+function modal(html) {
+  const back = document.createElement('div');
+  back.className = 'modal-back';
+  back.innerHTML = `<div class="modal" role="dialog" aria-modal="true">${html}</div>`;
+  document.body.append(back);
+  return { el: back.firstElementChild, back, close: () => back.remove() };
+}
+function confirmBox({ title, body, ok, danger = false }) {
+  return new Promise(resolve => {
+    const m = modal(`<h2>${title}</h2>${body}<div class="acts"><button class="btn ${danger ? 'danger' : 'primary'}" data-r="1">${ok ?? t('تمام')}</button><button class="btn ghost" data-r="0">${t('إلغاء')}</button></div>`);
+    const done = v => { m.close(); document.removeEventListener('keydown', key); resolve(v); };
+    const key = e => e.key === 'Escape' && done(false);
+    document.addEventListener('keydown', key);
+    m.back.addEventListener('click', e => { if (e.target === m.back) done(false); });
+    m.el.addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (b) done(b.dataset.r === '1'); });
+    $('[data-r="0"]', m.el).focus(); // the safe choice has the focus
+  });
+}
+let toastTimer = 0;
+function toast(msg, err = false) {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (err ? ' err' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = 'toast'; }, 4500);
+}
+
+// ---------- actions ----------
+async function recycle(path, bytes) {
+  const ok = await confirmBox({
+    title: t('ننقله لسلة المحذوفات؟'),
+    body: `<p class="path" style="color:var(--text);font-size:13px">${esc(path)}</p><p>${t('حجمه {0}. يروح لسلة المحذوفات وتقدر ترجعه منها. لو كان أكبر من مساحة السلة، ويندوز بيسألك قبل ما يحذفه نهائياً.', bdi(size(bytes)))}</p>`,
+    ok: t('انقله للسلة'), danger: true,
+  });
+  if (!ok) return false;
+  const done = await api('recycle', { path });
+  toast(done ? t('انتقل لسلة المحذوفات. المساحة تتحرر لما تفضّي السلة.') : t('ما انتقل. يمكن الملف مفتوح في برنامج، أو يحتاج صلاحية مسؤول.'), !done);
+  if (done) {
+    if (S.page === 'map') S.map = await api('children', { id: S.map.id });
+    if (S.page === 'files') S.files = await api('bigFiles');
+    if (['map', 'files'].includes(S.page)) draw();
+    reloadAfterChange();
+  }
+  return done;
+}
+const ACT = {
+  go: el => go(el.dataset.page),
+  scan: () => startScan(),
+  stopScan: () => api('stopScan').then(pollScan),
+  async admin() {
+    const ok = await confirmBox({
+      title: t('نشغّله كمسؤول؟'),
+      body: `<p>${t('كمسؤول نقدر نقرا المجلدات المحمية، ونشوف حرارة القرص وعمره، وننظف ملفات ويندوز، ونفرّغ كاش الرام. ويندوز بيطلب منك موافقة، وهالنافذة تتقفل وتنفتح من جديد.')}</p>`,
+      ok: t('شغّل كمسؤول'),
+    });
+    if (ok && !await api('admin')) toast(t('ما وافقت على صلاحية المسؤول، فكمّلنا بدونها.'));
+  },
+  seg: el => {
+    const k = el.dataset.k;
+    if (k === 'rest') go('map');
+    else if (['safe', 'dev', 'games', 'review', 'system'].includes(k)) goGroup(k);
+  },
+  goGroup: el => goGroup(el.dataset.k, el.dataset.key),
+  quickClean: () => cleanKeys([...S.sel].filter(k => allItems().some(i => i.key === k && i.group === 'safe'))),
+  clean: () => cleanKeys([...S.sel]),
+  async dir(el) {
+    S.map = await api('children', { id: +el.dataset.id });
+    if (S.page === 'map') { draw(); main.scrollTop = 0; } else go('map');
+  },
+  reveal: el => api('reveal', { path: el.dataset.path }),
+  recycle: el => recycle(el.dataset.path, +el.dataset.size),
+  toggleSug: el => {
+    const id = el.dataset.id;
+    S.open.has(id) ? S.open.delete(id) : S.open.add(id);
+    $('#sug-' + id)?.classList.toggle('open', S.open.has(id));
+  },
+  run: el => runItem(el.dataset.key),
+  kind: el => { S.kind = el.dataset.kind; draw(); },
+  async dupes() {
+    S.dupesAsked = true;
+    S.dupes = await api('dupes');
+    draw();
+    clearInterval(pageTimer);
+    pageTimer = setInterval(pollDupes, 800);
+  },
+  async dupDel(el) {
+    const g = S.dupes.groups[+el.dataset.g], f = g.files[+el.dataset.f];
+    if (!await recycle(f.path, g.size)) return;
+    g.files.splice(+el.dataset.f, 1);
+    if (g.files.length < 2) S.dupes.groups.splice(+el.dataset.g, 1);
+    else g.wasted = g.size * (g.files.length - 1);
+    draw();
+  },
+  async uninstall(el) {
+    if (!await confirmBox({ title: t('نلغي تثبيت {0}؟', esc(el.dataset.name)), body: `<p>${t('بنفتح برنامج إلغاء التثبيت الخاص فيه، وكمّل الخطوات منه.')}</p>`, ok: t('افتح إلغاء التثبيت') })) return;
+    await api('uninstall', { key: el.dataset.key });
+    toast(t('فتحنا برنامج إلغاء التثبيت.'));
+  },
+  async kill(el) {
+    const name = el.dataset.name, count = +el.dataset.count;
+    if (!await confirmBox({ title: t('نقفّل {0}؟', esc(name)), body: `<p>${count > 1 ? t('بنقفّل {0} نسخة منه. أي شغل ما حفظته فيه بيروح.', bdi(n(count))) : t('بنقفّل البرنامج. أي شغل ما حفظته فيه بيروح.')}</p>`, ok: t('قفّله'), danger: true })) return;
+    const k = await api('kill', { name });
+    toast(k ? t('قفّلنا {0} عملية.', n(k)) : t('ما قدرنا نقفّله، يمكن يحتاج صلاحية مسؤول.'), !k);
+  },
+  async optimize() {
+    const b = $('#optBtn');
+    b.disabled = true;
+    b.textContent = t('نحسّن…');
+    $('#optRes').textContent = '';
+    try {
+      const r = await api('optimize');
+      S.opt = await api('optState');
+      await liveTick();
+      if (S.page === 'ram') { $('#opt').innerHTML = optHtml(); $('#optRes').innerHTML = t('حرّرنا {0}', bdi(size(r.freed))); }
+    } finally {
+      const nb = $('#optBtn');
+      if (nb) { nb.disabled = false; nb.textContent = t('حسّن الرام الحين'); }
+    }
+  },
+  async quickOpt() {
+    const r = await api('optimize');
+    toast(t('حرّرنا {0} من الرام', size(r.freed)));
+    liveTick();
+  },
+  open: el => api('open', { what: el.dataset.what }),
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el || el.disabled) return;
+  Promise.resolve(ACT[el.dataset.act]?.(el, e)).catch(err => toast(err.message, true));
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  Promise.resolve(onChange(el)).catch(err => toast(err.message, true));
+});
+async function onChange(el) {
+  if (el.dataset.lang !== undefined) return switchLang(el.value);
+  if (el.dataset.set) return saveSetting(el);
+  if (el.dataset.key) el.checked ? S.sel.add(el.dataset.key) : S.sel.delete(el.dataset.key);
+  else if (el.dataset.sug) {
+    const s = S.sug.groups.find(g => g.id === el.dataset.sug);
+    for (const i of s.items.filter(i => BATCH.has(i.mode))) el.checked ? S.sel.add(i.key) : S.sel.delete(i.key);
+    $$(`#sug-${s.id} input[data-key]`).forEach(c => { c.checked = el.checked; });
+  } else return;
+  syncChecks();
+  $('#cleanBar').innerHTML = cleanBar();
+}
+async function saveSetting(el) {
+  const s = { ...S.opt.settings };
+  let startup = S.opt.startup;
+  const v = el.type === 'checkbox' ? el.checked : +el.value;
+  if (el.dataset.set === 'startup') startup = v; else s[el.dataset.set] = v;
+  if (!s.trim && !s.standby) s.trim = true; // at least one way to free RAM
+  S.opt = await api('saveSettings', { settings: s, startup });
+  $('#optSet').innerHTML = optSettingsHtml();
+  toast(t('انحفظ.'));
+}
+async function switchLang(code) {
+  applyLang(await api('setLang', { lang: code }));
+  S.sys = null; // the C# side rebuilds these in the new language
+  if (S.scan?.phase === 'done') { S.sug = await api('suggestions'); if (S.sug) defaultSelection(); }
+  side();
+  go(S.page);
+}
+
+// ---------- scanning ----------
+async function startScan() {
+  Object.assign(S, { sug: null, map: null, files: null, types: null, dupes: null, dupesAsked: false });
+  S.scan = await api('scan', { root: S.init.system });
+  pollScan();
+}
+let scanTimer = 0;
+async function pollScan() {
+  clearTimeout(scanTimer);
+  try { S.scan = await api('scanStatus'); } catch { /* keep the last status */ }
+  if (['scanning', 'analyzing'].includes(S.scan?.phase)) {
+    scanTimer = setTimeout(pollScan, 600);
+    if (S.page === 'home' && $('#scanBox')) {
+      $('#strip').innerHTML = strip();
+      $('#legend').innerHTML = legend();
+      $('#scanBox').innerHTML = scanBox();
+    }
+    return;
+  }
+  if (S.scan?.phase === 'done') {
+    S.sug = await api('suggestions');
+    if (S.sug) defaultSelection();
+    S.init.drives = (await api('init')).drives;
+  }
+  side();
+  if (['home', 'clean', 'files', 'dupes', 'map'].includes(S.page)) go(S.page);
+}
+
+// ---------- live numbers ----------
+const keep = (a, v) => { a.push(v); if (a.length > 90) a.shift(); };
+async function liveTick() {
+  try { S.live = await api('live'); } catch { return; }
+  if (!S.live) return;
+  keep(S.spark.cpu, S.live.cpu);
+  keep(S.spark.gpu, S.live.gpu);
+  keep(S.spark.disk, S.live.diskActive);
+  keep(S.spark.net, S.live.netDown + S.live.netUp);
+  side();
+  PAGES[S.page].live?.();
+}
+
+let resizeTimer = 0;
+addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (S.page === 'map') drawTreemap();
+    if (S.page === 'ram') drawRamChart();
+    if (S.page === 'sys') drawSparks();
+  }, 120);
+});
+
+async function boot() {
+  applyLang(await api('lang'));
+  S.init = await api('init');
+  side();
+  await go('home');
+  S.scan = await api('scanStatus');
+  if (S.scan.phase === 'idle') await startScan(); else pollScan();
+  liveTick();
+  setInterval(liveTick, 2000);
+}
+boot().catch(e => { main.innerHTML = `<div class="empty"><h1>${t('ما قدرنا نشغّل البرنامج')}</h1><p>${esc(e.message)}</p></div>`; });
+</script>
+</body>
+</html>
