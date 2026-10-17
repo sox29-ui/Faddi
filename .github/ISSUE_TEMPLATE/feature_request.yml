@@ -1,0 +1,20 @@
+name: Feature request
+description: An idea that would make Faddi more useful.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The problem or the moment you wished Faddi could help, in your own words.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help?
+      description: How you imagine Faddi could handle it.
+  - type: textarea
+    id: tried
+    attributes:
+      label: Anything you've tried instead?

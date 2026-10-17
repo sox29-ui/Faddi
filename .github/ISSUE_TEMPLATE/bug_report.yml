@@ -1,0 +1,54 @@
+name: Bug report
+description: Something in Faddi doesn't work the way it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. If Faddi deleted or changed something it shouldn't have, please report it privately instead, as described in [SECURITY.md](https://github.com/sox29-ui/Faddi/blob/main/SECURITY.md).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to make it happen again
+      placeholder: |
+        1. Open Cleanup
+        2. Tick ...
+        3. Press Clean selected
+  - type: input
+    id: version
+    attributes:
+      label: Faddi version
+      description: The release you downloaded, or right-click Faddi.exe > Properties > Details.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Press Win+R, type winver, press Enter.
+      placeholder: "Windows 11 24H2 (build 26100)"
+    validations:
+      required: true
+  - type: dropdown
+    id: admin
+    attributes:
+      label: Was Faddi running as admin?
+      options: ["No", "Yes", "Not sure"]
+  - type: dropdown
+    id: language
+    attributes:
+      label: App language
+      options: [English, العربية, Español, Français, Português, Русский, Türkçe, 简体中文]
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag images here. Please hide anything personal in file names or paths first.

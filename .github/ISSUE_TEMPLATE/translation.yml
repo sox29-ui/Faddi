@@ -1,0 +1,25 @@
+name: Translation
+description: A new language, or a better word or sentence in an existing one.
+labels: [translation]
+body:
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      placeholder: "Deutsch (de)"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is it?
+      options: ["A fix in an existing language", "A new language"]
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: For a fix, the current text, where it appears, and what it should say. For a new language, say whether you'd like to translate it yourself; the steps are in CONTRIBUTING.md.
+    validations:
+      required: true
