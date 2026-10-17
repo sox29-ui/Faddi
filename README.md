@@ -65,20 +65,20 @@ Everything stays on your PC. Faddi sends nothing over the network.
 
 ## Features
 
-| | Feature | What you can do |
-|---|---|---|
-| <img src="docs/icons/strip.svg" width="22"> | **Disk at a glance** | One strip splits the drive into games and programs, developer leftovers, caches and temp, old and big things, Windows, and everything else. |
-| <img src="docs/icons/map.svg" width="22"> | **Space map** | Every folder as a box sized by the space it takes, colored by how long since anything in it changed. Click a box to go inside. |
-| <img src="docs/icons/clean.svg" width="22"> | **Cleanup by safety** | Caches and temp files come pre-selected; developer junk, big games and folders untouched for 6 months wait for you. Every item says what it is and what happens if you delete it. |
-| <img src="docs/icons/code.svg" width="22"> | **Developer junk** | `node_modules` next to a lockfile, Python venvs, Unity `Library`, Unreal `DerivedDataCache`, .NET `bin`/`obj`, Gradle, Flutter and Rust build output, and the npm, pip, uv, NuGet, Gradle and Hugging Face caches. |
-| <img src="docs/icons/files.svg" width="22"> | **Largest files and types** | The biggest files on the drive, and which kinds of files take the most room. |
-| <img src="docs/icons/dupes.svg" width="22"> | **Duplicate files** | Copies found by comparing content, not names. Hard links, which only look like copies, are left out. |
-| <img src="docs/icons/apps.svg" width="22"> | **Installed programs** | Every program with its real size on disk, and a button that runs its own uninstaller. |
-| <img src="docs/icons/bolt.svg" width="22"> | **RAM optimizer** | Frees memory on a click, or on its own when usage passes a limit or every few minutes, only while the CPU is idle. [More below](#the-ram-optimizer). |
-| <img src="docs/icons/ram.svg" width="22"> | **RAM monitor** | Samples every 2 seconds and logs sudden jumps with the programs behind them, plus tips such as a WSL limit, a leaking driver or a Gradle daemon left running. |
-| <img src="docs/icons/sys.svg" width="22"> | **System info** | CPU, RAM sticks, GPU with live temperature on NVIDIA, disks with health, temperature and wear, network, displays, battery and startup apps, each with a short explanation. |
-| <img src="docs/icons/tray.svg" width="22"> | **Next to the clock** | Closing the window leaves Faddi in the tray, watching RAM. It can start with Windows. |
-| <img src="docs/icons/globe.svg" width="22"> | **Eight languages** | English, العربية, Español, Français, Português, Русский, Türkçe and 简体中文, right to left for Arabic. It opens in your Windows language. |
+| Feature | What you can do |
+|---|---|
+| <img src="docs/icons/strip.svg" width="22"> **Disk at a glance** | One strip splits the drive into games and programs, developer leftovers, caches and temp, old and big things, Windows, and everything else. |
+| <img src="docs/icons/map.svg" width="22"> **Space map** | Every folder as a box sized by the space it takes, colored by how long since anything in it changed. Click a box to go inside. |
+| <img src="docs/icons/clean.svg" width="22"> **Cleanup by safety** | Caches and temp files come pre-selected; developer junk, big games and folders untouched for 6 months wait for you. Every item says what it is and what happens if you delete it. |
+| <img src="docs/icons/code.svg" width="22"> **Developer junk** | `node_modules` next to a lockfile, Python venvs, Unity `Library`, Unreal `DerivedDataCache`, .NET `bin`/`obj`, Gradle, Flutter and Rust build output, and the npm, pip, uv, NuGet, Gradle and Hugging Face caches. |
+| <img src="docs/icons/files.svg" width="22"> **Largest files and types** | The biggest files on the drive, and which kinds of files take the most room. |
+| <img src="docs/icons/dupes.svg" width="22"> **Duplicate files** | Copies found by comparing content, not names. Hard links, which only look like copies, are left out. |
+| <img src="docs/icons/apps.svg" width="22"> **Installed programs** | Every program with its real size on disk, and a button that runs its own uninstaller. |
+| <img src="docs/icons/bolt.svg" width="22"> **RAM optimizer** | Frees memory on a click, or on its own when usage passes a limit or every few minutes, only while the CPU is idle. [More below](#the-ram-optimizer). |
+| <img src="docs/icons/ram.svg" width="22"> **RAM monitor** | Samples every 2 seconds and logs sudden jumps with the programs behind them, plus tips such as a WSL limit, a leaking driver or a Gradle daemon left running. |
+| <img src="docs/icons/sys.svg" width="22"> **System info** | CPU, RAM sticks, GPU with live temperature on NVIDIA, disks with health, temperature and wear, network, displays, battery and startup apps, each with a short explanation. |
+| <img src="docs/icons/tray.svg" width="22"> **Next to the clock** | Closing the window leaves Faddi in the tray, watching RAM. It can start with Windows. |
+| <img src="docs/icons/globe.svg" width="22"> **Eight languages** | English, العربية, Español, Français, Português, Русский, Türkçe and 简体中文, right to left for Arabic. It opens in your Windows language. |
 
 ## Screenshots
 
@@ -105,13 +105,13 @@ Everything stays on your PC. Faddi sends nothing over the network.
 
 Everything Faddi finds lands in one of five groups, in the same colors as the disk strip.
 
-| | Group | What's in it | What happens when you clean it |
-|---|---|---|---|
-| <img src="docs/icons/dot-safe.svg" width="12"> | **Safe cleanup** | Temp files older than a week, browser and graphics shader caches, and other caches programs rebuild | Deleted. Programs recreate them when needed. Pre-selected. |
-| <img src="docs/icons/dot-dev.svg" width="12"> | **Developer leftovers** | `node_modules`, venvs, build folders and package caches | Deleted. They come back with one command, like `npm install`. |
-| <img src="docs/icons/dot-games.svg" width="12"> | **Games and programs** | Big installed games and apps | Removed with their own uninstaller, or from Windows Settings. |
-| <img src="docs/icons/dot-review.svg" width="12"> | **Old and big things** | Folders untouched for 6 months, old downloads and videos | Moved to the Recycle Bin, so you can restore them. |
-| <img src="docs/icons/dot-system.svg" width="12"> | **Windows and system** | Pagefile, hibernation file, WinSxS, restore points | Changed only through Windows' own tools, with what each change means. |
+| Group | What's in it | What happens when you clean it |
+|---|---|---|
+| <img src="docs/icons/dot-safe.svg" width="12"> **Safe cleanup** | Temp files older than a week, browser and graphics shader caches, and other caches programs rebuild | Deleted. Programs recreate them when needed. Pre-selected. |
+| <img src="docs/icons/dot-dev.svg" width="12"> **Developer leftovers** | `node_modules`, venvs, build folders and package caches | Deleted. They come back with one command, like `npm install`. |
+| <img src="docs/icons/dot-games.svg" width="12"> **Games and programs** | Big installed games and apps | Removed with their own uninstaller, or from Windows Settings. |
+| <img src="docs/icons/dot-review.svg" width="12"> **Old and big things** | Folders untouched for 6 months, old downloads and videos | Moved to the Recycle Bin, so you can restore them. |
+| <img src="docs/icons/dot-system.svg" width="12"> **Windows and system** | Pagefile, hibernation file, WinSxS, restore points | Changed only through Windows' own tools, with what each change means. |
 
 ## The RAM optimizer
 
